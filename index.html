@@ -1,0 +1,2523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOYA HOUSE - Every sip, a new trip</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --soft-ivory: #F4EFE9;
+            --warm-beige: #E6DDCE;
+            --deep-black: #080907;
+            --coffee-cream: #F1E6C3;
+            --healthy-green: #B7D39A;
+            --olive-green: #70924C;
+            --soft-peach: #D8A98F;
+            --terracotta: #C0542A;
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Manrope', -apple-system, sans-serif;
+            --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+            --motion-soft: cubic-bezier(0.16, 1, 0.3, 1);
+            --motion-fast: 320ms;
+            --motion-med: 720ms;
+            --motion-slow: 1400ms;
+            --parallax-x: 0;
+            --parallax-y: 0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--soft-ivory);
+            color: var(--deep-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== PAGE TRANSITION ===== */
+        .page-transition {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: var(--deep-black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: all;
+        }
+        .page-transition-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            overflow: hidden;
+        }
+        .page-transition-logo {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            color: var(--soft-ivory);
+            opacity: 0;
+            transform: translateY(40px);
+            animation: ptLogoIn 0.9s var(--motion-soft) 0.2s forwards;
+        }
+        .page-transition-tagline {
+            font-family: var(--font-display);
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+            font-style: italic;
+            color: var(--terracotta);
+            letter-spacing: 0.08em;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: ptTaglineIn 0.8s var(--motion-soft) 0.5s forwards;
+        }
+        .page-transition-line {
+            width: 0;
+            height: 1px;
+            background: var(--terracotta);
+            margin-top: 0.5rem;
+            animation: ptLineExpand 0.6s var(--motion-ease) 0.9s forwards;
+        }
+        @keyframes ptLogoIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes ptTaglineIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes ptLineExpand {
+            to { width: 80px; }
+        }
+        .page-transition.is-exiting {
+            animation: ptSlideUp 1s var(--motion-soft) 1.4s forwards;
+        }
+        @keyframes ptSlideUp {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100%); }
+        }
+        body.is-loaded .page-transition {
+            pointer-events: none;
+        }
+        body.is-loaded .page-transition.is-exiting {
+            animation: ptSlideUp 1s var(--motion-soft) 0.1s forwards;
+        }
+
+        /* Reduced motion: skip transition quickly */
+        @media (prefers-reduced-motion: reduce) {
+            .page-transition {
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+            .page-transition-logo,
+            .page-transition-tagline,
+            .page-transition-line {
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+            .page-transition.is-exiting {
+                animation: none;
+                opacity: 0;
+            }
+            body.is-loaded .page-transition {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(244, 239, 233, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 1px solid transparent;
+            opacity: 0;
+            animation: headerFadeIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
+        }
+        @keyframes headerFadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        header.scrolled {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+            box-shadow: 0 4px 30px rgba(8, 9, 7, 0.06);
+            border-bottom: 1px solid var(--warm-beige);
+        }
+        .header-inner {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 1.25rem 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+        .header-left {
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--deep-black);
+            text-decoration: none;
+            position: relative;
+            padding: 0.25rem 0;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--terracotta);
+            transition: width 0.3s ease;
+        }
+        .nav-links a:hover::after { width: 100%; }
+        .header-center {
+            flex: 0 0 auto;
+            text-align: center;
+        }
+        .logo-main {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.35em;
+            color: var(--deep-black);
+            text-decoration: none;
+            display: block;
+            white-space: nowrap;
+        }
+        .logo-tagline {
+            font-size: 0.55rem;
+            letter-spacing: 0.35em;
+            color: var(--terracotta);
+            text-transform: uppercase;
+            margin-top: 0.15rem;
+            white-space: nowrap;
+        }
+        .header-right {
+            flex: 1;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .cart-btn {
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            border: none;
+            padding: 0.65rem 1.25rem;
+            font-family: var(--font-body);
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            white-space: nowrap;
+        }
+        .cart-btn:hover { background: var(--terracotta); }
+        .cart-count {
+            background: var(--terracotta);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+        }
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--deep-black);
+        }
+        .mobile-nav {
+            display: none;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 8rem 0 4rem;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--coffee-cream) 0%, var(--warm-beige) 50%, var(--soft-peach) 100%);
+            opacity: 0.5;
+            transform: scale(1);
+        }
+        body.motion-ready .hero-bg {
+            transform: scale(1.06);
+            animation: heroBgIn 1.4s var(--motion-soft) 1.6s forwards;
+        }
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23080907' fill-opacity='0.025'%3E%3Ccircle cx='40' cy='40' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .hero-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            pointer-events: none;
+            transition: transform 0.1s linear;
+        }
+        .hero-circle--1 {
+            width: 400px;
+            height: 400px;
+            background: var(--coffee-cream);
+            top: 10%;
+            right: -100px;
+            animation: floatDrift 15s ease-in-out infinite;
+            transform: translate(var(--parallax-x, 0), var(--parallax-y, 0));
+        }
+        .hero-circle--2 {
+            width: 300px;
+            height: 300px;
+            background: var(--soft-peach);
+            bottom: 5%;
+            left: -80px;
+            animation: floatDriftAlt 18s ease-in-out infinite;
+            transform: translate(calc(var(--parallax-x, 0) * 0.6), calc(var(--parallax-y, 0) * 0.6));
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 4rem;
+            text-align: center;
+        }
+        .hero-eyebrow {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 1.5rem;
+            opacity: 1;
+        }
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(3.5rem, 10vw, 9rem);
+            font-weight: 700;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            opacity: 1;
+        }
+        .hero-title-line {
+            display: block;
+            overflow: hidden;
+        }
+        .hero-title-line span {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        body.motion-ready .hero-eyebrow {
+            opacity: 0;
+            animation: heroEyebrowIn 0.8s var(--motion-soft) 1.8s forwards;
+        }
+        body.motion-ready .hero-title-line span {
+            opacity: 0;
+            transform: translateY(110%);
+        }
+        body.motion-ready.is-loaded .hero-title-line:first-child span {
+            animation: heroTitleMask 0.9s var(--motion-soft) 2s forwards;
+        }
+        body.motion-ready.is-loaded .hero-title-line:last-child span {
+            animation: heroTitleMask 0.9s var(--motion-soft) 2.2s forwards;
+        }
+        body.motion-ready .hero-description {
+            opacity: 0;
+            animation: heroContentFade 0.9s var(--motion-soft) 2.4s forwards;
+        }
+        body.motion-ready .hero-tagline {
+            opacity: 0;
+            animation: heroContentFade 0.9s var(--motion-soft) 2.55s forwards;
+        }
+        body.motion-ready .hero-ctas {
+            opacity: 0;
+            animation: heroContentFade 0.9s var(--motion-soft) 2.7s forwards;
+        }
+        .hero-title .italic { color: var(--terracotta); font-style: italic; }
+        .btn-primary {
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            padding: 1rem 2.5rem;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover { background: var(--terracotta); transform: translateY(-2px); }
+        .btn-secondary {
+            background: transparent;
+            color: var(--deep-black);
+            padding: 1rem 2.5rem;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 2px solid var(--deep-black);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover { background: var(--deep-black); color: var(--soft-ivory); transform: translateY(-2px); }
+
+        /* Cinematic keyframes */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes heroBgIn {
+            0% { transform: scale(1.06); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes heroTitleMask {
+            0% { transform: translateY(110%); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes heroEyebrowIn {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes heroContentFade {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes floatDrift {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-14px, -18px); }
+        }
+        @keyframes floatDriftAlt {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(12px, 16px); }
+        }
+        @keyframes sectionPanelIn {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes textMaskReveal {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes railCardIn {
+            0% { opacity: 0; transform: translateX(20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        /* ===== MARQUEE ===== */
+        .marquee {
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            padding: 1.25rem 0;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-track {
+            display: inline-flex;
+            animation: marqueeScroll 30s linear infinite;
+            gap: 3rem;
+        }
+        .marquee-item {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-style: italic;
+            letter-spacing: 0.05em;
+            display: inline-flex;
+            align-items: center;
+            gap: 3rem;
+        }
+        .marquee-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            display: inline-block;
+        }
+        @keyframes marqueeScroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* ===== STORY SECTION ===== */
+        .story-section {
+            padding: 8rem 4rem;
+            background: var(--soft-ivory);
+            position: relative;
+            overflow: hidden;
+        }
+        .story-section::before {
+            content: '';
+            position: absolute;
+            top: -200px;
+            right: -200px;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: var(--coffee-cream);
+            opacity: 0.3;
+        }
+        .story-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 5rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .story-heading {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+        }
+        .story-heading span { color: var(--terracotta); }
+        .story-text {
+            font-size: 1.05rem;
+            line-height: 2;
+            opacity: 0.85;
+        }
+        .story-text p { margin-bottom: 1.5rem; }
+        .story-text p:last-child { margin-bottom: 0; }
+
+        /* ===== THREE MOODS SECTION ===== */
+        .moods-section {
+            padding: 6rem 4rem;
+            background: var(--warm-beige);
+        }
+        .moods-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 4rem;
+        }
+        .moods-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 1rem;
+        }
+        .moods-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            line-height: 1.1;
+        }
+        .moods-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+        .mood-card {
+            border-radius: 1.5rem;
+            padding: 3rem 2.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .mood-card:hover { transform: translateY(-8px); }
+        .mood-card--voya { background: var(--coffee-cream); }
+        .mood-card--papa { background: var(--healthy-green); }
+        .mood-card--mama { background: var(--soft-peach); }
+        .mood-card-bg-text {
+            position: absolute;
+            bottom: -20px;
+            right: -10px;
+            font-family: var(--font-display);
+            font-size: 5rem;
+            font-weight: 700;
+            opacity: 0.08;
+            line-height: 1;
+            pointer-events: none;
+        }
+        .mood-card-name {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .mood-card-subtitle {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .mood-card-desc {
+            font-size: 0.9rem;
+            line-height: 1.8;
+            opacity: 0.85;
+            position: relative;
+            z-index: 1;
+        }
+        .mood-card-btn {
+            margin-top: 2rem;
+            display: inline-block;
+            padding: 0.65rem 1.5rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            text-decoration: none;
+            border-radius: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            position: relative;
+            z-index: 1;
+        }
+        .mood-card-btn:hover { background: var(--terracotta); }
+
+        /* ===== MENU SECTION ===== */
+        .menu-section {
+            padding: 6rem 0 8rem;
+            background: var(--soft-ivory);
+            position: relative;
+        }
+        .menu-header {
+            text-align: center;
+            padding: 0 2rem 3rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .menu-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            margin-bottom: 1rem;
+        }
+        .menu-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .menu-subtitle {
+            font-size: 1rem;
+            opacity: 0.7;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Brand Room Switch */
+        .brand-switch {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 0 2rem 3rem;
+        }
+        .brand-room {
+            font: inherit;
+            color: inherit;
+            padding: 1.25rem 2rem;
+            border-radius: 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            text-align: center;
+            min-width: 180px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .brand-room::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.1;
+            transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .brand-room:hover::before { opacity: 0.2; }
+        .brand-room.active::before { opacity: 0.25; }
+        .brand-room:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(8,9,7,0.1); }
+        .brand-room--voya { background: var(--coffee-cream); border-color: var(--coffee-cream); }
+        .brand-room--voya::before { background: var(--terracotta); }
+        .brand-room--voya:hover, .brand-room--voya.active { border-color: var(--terracotta); }
+        .brand-room--papa { background: var(--healthy-green); border-color: var(--healthy-green); }
+        .brand-room--papa::before { background: var(--olive-green); }
+        .brand-room--papa:hover, .brand-room--papa.active { border-color: var(--olive-green); }
+        .brand-room--mama { background: var(--soft-peach); border-color: var(--soft-peach); }
+        .brand-room--mama::before { background: var(--terracotta); }
+        .brand-room--mama:hover, .brand-room--mama.active { border-color: var(--terracotta); }
+        .brand-room-name {
+            display: block;
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            position: relative;
+            z-index: 1;
+        }
+        .brand-room-label {
+            display: block;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Room Intro */
+        .room-intro {
+            max-width: 1300px;
+            margin: 0 auto 3rem;
+            padding: 2.5rem 3rem;
+            border-radius: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+        .room-intro--voya { background: linear-gradient(135deg, var(--coffee-cream) 0%, var(--warm-beige) 100%); }
+        .room-intro--papa { background: linear-gradient(135deg, var(--healthy-green) 0%, var(--olive-green) 100%); color: white; }
+        .room-intro--mama { background: linear-gradient(135deg, var(--soft-peach) 0%, var(--terracotta) 100%); color: white; }
+        .room-intro-title {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .room-intro-subtitle {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        .room-intro-desc {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            opacity: 0.85;
+            max-width: 600px;
+        }
+
+        /* Category Bar */
+        .category-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            max-width: 1300px;
+            margin: 0 auto 2.5rem;
+            padding: 0 3rem;
+        }
+        .category-nav-btn {
+            flex: 0 0 auto;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid var(--warm-beige);
+            background: transparent;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--deep-black);
+        }
+        .category-nav-btn:hover {
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            border-color: var(--deep-black);
+            transform: scale(1.05);
+        }
+
+        /* Category Chips */
+        .category-chips {
+            flex: 1;
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .category-chips::-webkit-scrollbar { display: none; }
+        .category-chip {
+            padding: 0.6rem 1.25rem;
+            border-radius: 2rem;
+            border: 1.5px solid var(--warm-beige);
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            white-space: nowrap;
+            color: var(--deep-black);
+        }
+        .category-chip:hover { border-color: var(--deep-black); transform: translateY(-1px); }
+        .category-chip.active {
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            border-color: var(--deep-black);
+        }
+        .category-chip-count {
+            opacity: 0.6;
+            font-weight: 400;
+            margin-left: 0.4rem;
+        }
+
+        /* Menu Content Area */
+        .menu-content-area {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+
+        /* Product Rail */
+        .product-rail-section {}
+        .product-rail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .product-rail-title {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        .product-rail-nav {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .product-rail-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid var(--warm-beige);
+            background: transparent;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s cubic-bezier(0.22, 1, 0.36, 1), transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--deep-black);
+        }
+        .product-rail-btn:hover {
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            border-color: var(--deep-black);
+            transform: scale(1.05);
+        }
+        .product-rail {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 0.5rem 0.25rem 1.25rem;
+            -webkit-overflow-scrolling: touch;
+        }
+        .product-rail::-webkit-scrollbar { display: none; }
+
+        /* Rail Product Cards */
+        .rail-card {
+            box-sizing: border-box;
+            flex: 0 0 220px;
+            min-height: 180px;
+            background: white;
+            border: 1px solid var(--warm-beige);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: border-color 0.35s var(--motion-soft), box-shadow 0.35s var(--motion-soft), transform 0.35s var(--motion-soft);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: translateX(16px);
+        }
+        .rail-card.is-entering {
+            animation: railCardIn 0.5s var(--motion-soft) forwards;
+        }
+        .rail-card:hover {
+            border-color: var(--terracotta);
+            box-shadow: 0 8px 24px rgba(8, 9, 7, 0.1);
+        }
+        .rail-card.selected {
+            border-color: var(--terracotta);
+            border-width: 2px;
+            box-shadow: inset 0 0 0 1px var(--terracotta), 0 8px 24px rgba(8, 9, 7, 0.08);
+            transform: none;
+        }
+        .rail-card-name {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.2;
+        }
+        .rail-card-desc {
+            font-size: 0.7rem;
+            line-height: 1.5;
+            opacity: 0.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .rail-card-cat {
+            font-size: 0.55rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--terracotta);
+            opacity: 0.7;
+        }
+        .rail-card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 0.5rem;
+        }
+        .rail-card-price {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--terracotta);
+        }
+        .rail-card-add {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: var(--deep-black);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .rail-card-add:hover { background: var(--terracotta); transform: scale(1.1); }
+        .rail-card-qty {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--deep-black);
+            border-radius: 2rem;
+            padding: 0.25rem 0.5rem;
+        }
+        .rail-card-qty-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: none;
+            background: var(--terracotta);
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .rail-card-qty-btn:hover { background: var(--soft-peach); color: var(--deep-black); }
+        .rail-card-qty-val {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: var(--soft-ivory);
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* ===== STICKY BOTTOM ORDER STRIP ===== */
+        .order-strip {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            z-index: 1800;
+            box-shadow: 0 -4px 30px rgba(8, 9, 7, 0.2);
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .order-strip.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        body.order-strip-visible .menu-section {
+            padding-bottom: 7rem;
+        }
+        .order-strip-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .order-strip-count {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .order-strip-total {
+            font-family: var(--font-display);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        .order-strip-total span {
+            font-size: 0.8rem;
+            font-weight: 400;
+            opacity: 0.6;
+        }
+        .order-strip-btn {
+            background: var(--terracotta);
+            color: white;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 2.5rem;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .order-strip-btn:hover { background: var(--soft-peach); color: var(--deep-black); transform: translateY(-2px); }
+
+        /* ===== LOCATIONS ===== */
+        .locations-section {
+            padding: 8rem 4rem;
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            position: relative;
+            overflow: hidden;
+        }
+        .locations-section::before {
+            content: '';
+            position: absolute;
+            bottom: -150px;
+            left: -150px;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            opacity: 0.05;
+        }
+        .locations-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .locations-header {
+            margin-bottom: 4rem;
+        }
+        .locations-eyebrow {
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+        .locations-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 700;
+        }
+        .locations-desc {
+            font-size: 1rem;
+            opacity: 0.7;
+            margin-top: 1rem;
+            max-width: 500px;
+        }
+        .locations-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        .location-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            transition: all 0.4s ease;
+        }
+        .location-card:hover {
+            background: rgba(255,255,255,0.07);
+            transform: translateY(-5px);
+            border-color: rgba(192, 84, 42, 0.3);
+        }
+        .location-icon {
+            width: 54px;
+            height: 54px;
+            background: var(--terracotta);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+        }
+        .location-name {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .location-detail {
+            font-size: 0.9rem;
+            opacity: 0.6;
+            margin-bottom: 2rem;
+        }
+        .location-btn {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border: 1.5px solid rgba(255,255,255,0.2);
+            border-radius: 2rem;
+            color: var(--soft-ivory);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: transparent;
+        }
+        .location-btn:hover {
+            background: var(--terracotta);
+            border-color: var(--terracotta);
+        }
+        .location-btn[disabled] {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ===== FOOTER / CONTACT ===== */
+        .footer {
+            padding: 5rem 4rem 2rem;
+            background: var(--warm-beige);
+        }
+        .footer-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .footer-top {
+            display: grid;
+            grid-template-columns: 1.5fr 2fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(8, 9, 7, 0.1);
+        }
+        .footer-brand-logo {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            margin-bottom: 0.5rem;
+        }
+        .footer-brand-tagline {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--terracotta);
+        }
+        .footer-contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        .footer-contact-item {}
+        .footer-contact-label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.5;
+            margin-bottom: 0.5rem;
+        }
+        .footer-contact-value {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .footer-contact-value a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-contact-value a:hover { color: var(--terracotta); }
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            opacity: 0.5;
+        }
+
+        /* ===== CART DRAWER ===== */
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 9, 7, 0.6);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+        .cart-overlay.open { opacity: 1; visibility: visible; }
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: var(--soft-ivory);
+            z-index: 2001;
+            transform: translateX(100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .cart-drawer.open { transform: translateX(0); }
+        .cart-header {
+            padding: 1.75rem 2rem;
+            border-bottom: 1px solid var(--warm-beige);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .cart-title {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .cart-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--warm-beige);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cart-close:hover { background: var(--deep-black); color: white; }
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem 2rem;
+        }
+        .cart-empty {
+            text-align: center;
+            padding: 4rem 1rem;
+            opacity: 0.4;
+        }
+        .cart-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--warm-beige);
+            gap: 1rem;
+        }
+        .cart-item-info { flex: 1; }
+        .cart-item-name {
+            font-family: var(--font-display);
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .cart-item-unit {
+            font-size: 0.8rem;
+            color: var(--terracotta);
+            margin-bottom: 0.75rem;
+        }
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .cart-item-qty-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 1px solid var(--deep-black);
+            background: transparent;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .cart-item-qty-btn:hover { background: var(--deep-black); color: white; }
+        .cart-item-qty {
+            font-weight: 600;
+            min-width: 24px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .cart-item-remove {
+            background: none;
+            border: none;
+            color: var(--terracotta);
+            cursor: pointer;
+            font-size: 0.75rem;
+            text-decoration: underline;
+            margin-left: 0.5rem;
+        }
+        .cart-item-total {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .cart-footer {
+            padding: 1.75rem 2rem;
+            border-top: 1px solid var(--warm-beige);
+            background: white;
+        }
+        .cart-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+        .cart-total-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .cart-total-value {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .whatsapp-btn {
+            width: 100%;
+            padding: 1.1rem;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+        }
+        .whatsapp-btn:hover { background: #128C7E; transform: translateY(-2px); }
+        .whatsapp-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--deep-black);
+            color: white;
+            padding: 0.9rem 1.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 3000;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            pointer-events: none;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* ===== REVEAL ===== */
+        /* Content is visible by default. Motion mode (body.motion-ready) enables hiding. */
+        .reveal,
+        .reveal-scale,
+        .stagger-item,
+        .section-motion {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-mask {
+            clip-path: inset(0 0 0 0);
+        }
+
+        /* Motion mode: hide elements until they scroll into view */
+        body.motion-ready .reveal:not(.visible) {
+            opacity: 0;
+            transform: translateY(40px);
+            transition:
+                opacity var(--motion-med) var(--motion-soft),
+                transform var(--motion-med) var(--motion-soft);
+        }
+        body.motion-ready .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.motion-ready .reveal-scale:not(.visible) {
+            opacity: 0;
+            transform: translateY(32px) scale(0.98);
+            transition:
+                opacity var(--motion-med) var(--motion-soft),
+                transform var(--motion-med) var(--motion-soft);
+        }
+        body.motion-ready .reveal-scale.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        body.motion-ready .stagger-item:not(.visible) {
+            opacity: 0;
+            transform: translateY(28px);
+            transition:
+                opacity var(--motion-med) var(--motion-soft),
+                transform var(--motion-med) var(--motion-soft);
+        }
+        body.motion-ready .stagger-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.motion-ready .reveal-mask:not(.visible) {
+            clip-path: inset(0 0 100% 0);
+            transition: clip-path var(--motion-med) var(--motion-soft);
+        }
+        body.motion-ready .reveal-mask.visible {
+            clip-path: inset(0 0 0 0);
+        }
+
+        /* Section panel motion - cinematic panel entry */
+        body.motion-ready .section-motion:not(.visible) {
+            opacity: 0;
+            transform: translateY(40px);
+            transition:
+                opacity var(--motion-med) var(--motion-soft),
+                transform var(--motion-med) var(--motion-soft);
+        }
+        body.motion-ready .section-motion.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Text masked reveal for headings */
+        .text-reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        body.motion-ready .text-reveal:not(.visible) {
+            opacity: 0;
+            transform: translateY(16px);
+            transition:
+                opacity var(--motion-med) var(--motion-ease),
+                transform var(--motion-med) var(--motion-ease);
+        }
+        body.motion-ready .text-reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== REDUCED MOTION ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .story-container { grid-template-columns: 1fr; gap: 2.5rem; }
+            .moods-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .locations-grid { grid-template-columns: 1fr; }
+            .footer-top { grid-template-columns: 1fr; gap: 2.5rem; }
+            .hero-content { padding: 0 2rem; }
+        }
+
+        @media (max-width: 768px) {
+            body { overflow-x: hidden; }
+            .header-inner {
+                padding: 1rem 1.25rem;
+                gap: 1rem;
+            }
+            .header-left { display: none; }
+            .header-center { flex: 1; text-align: left; }
+            .header-right { flex: 0 0 auto; gap: 0.75rem; }
+            .nav-desktop { display: none; }
+            .logo-main { font-size: 1.2rem; letter-spacing: 0.2em; }
+            .logo-tagline { font-size: 0.5rem; letter-spacing: 0.25em; }
+            .cart-btn { padding: 0.55rem 1rem; font-size: 0.6rem; }
+            .mobile-menu-btn { display: block; }
+            .mobile-nav {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--soft-ivory);
+                border-bottom: 1px solid var(--warm-beige);
+                box-shadow: 0 10px 30px rgba(8,9,7,0.1);
+                z-index: 999;
+            }
+            .mobile-nav.open {
+                display: block;
+            }
+            .mobile-nav ul {
+                list-style: none;
+                padding: 1.5rem 1.5rem 2rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+            }
+            .mobile-nav li {
+                border-bottom: 1px solid var(--warm-beige);
+            }
+            .mobile-nav li:last-child {
+                border-bottom: none;
+            }
+            .mobile-nav a {
+                display: block;
+                padding: 1rem 0;
+                font-size: 0.8rem;
+                font-weight: 600;
+                letter-spacing: 0.15em;
+                text-transform: uppercase;
+                color: var(--deep-black);
+                text-decoration: none;
+                transition: color 0.2s ease;
+            }
+            .mobile-nav a:hover {
+                color: var(--terracotta);
+            }
+            .hero { padding: 6rem 0 3rem; }
+            .hero-content { padding: 0 1.5rem; }
+            .hero-title { font-size: clamp(2.8rem, 14vw, 5rem); }
+            .hero-circle--1 { animation: floatDrift 20s ease-in-out infinite; opacity: 0.1; transform: none; }
+            .hero-circle--2 { animation: floatDriftAlt 24s ease-in-out infinite; opacity: 0.1; transform: none; }
+            .hero-ctas { flex-direction: column; align-items: center; }
+            .btn-primary, .btn-secondary { width: 100%; max-width: 280px; text-align: center; }
+            .story-section { padding: 4rem 1.5rem; }
+            .moods-section { padding: 4rem 1.5rem; }
+            .story-container { padding: 0; gap: 2rem; }
+            .story-heading { font-size: clamp(2rem, 8vw, 3rem); }
+            .menu-section { padding: 4rem 0 6rem; overflow-x: visible; }
+            .menu-header { padding: 0 1.5rem 2rem; }
+            .brand-switch { padding: 0 1rem 1.5rem; gap: 0.5rem; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+            .brand-switch::-webkit-scrollbar { display: none; }
+            .brand-room { min-width: 0; flex: 0 0 calc(33.33% - 0.35rem); padding: 0.75rem 0.35rem; }
+            .brand-room:active { transform: scale(0.97); transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1); }
+            .brand-room-name { font-size: 1rem; }
+            .brand-room-label { font-size: 0.55rem; }
+            .room-intro { padding: 1.5rem 1rem; margin: 0 1rem 1.5rem; border-radius: 1rem; }
+            .room-intro-title { font-size: 1.5rem; }
+            .room-intro-subtitle { font-size: 0.95rem; }
+            .room-intro-desc { font-size: 0.85rem; }
+            .category-bar { padding: 0 0.75rem; margin-bottom: 1.5rem; }
+            .category-nav-btn { width: 30px; height: 30px; font-size: 0.9rem; flex: 0 0 30px; }
+            .category-chip { padding: 0.5rem 0.85rem; font-size: 0.65rem; }
+            .menu-content-area { padding: 0 1rem; overflow-x: visible; }
+            .product-rail-section { overflow-x: visible; }
+            .product-rail-header { padding: 0; margin-bottom: 1rem; }
+            .product-rail-title { font-size: 1.1rem; }
+            .product-rail {
+                padding: 0.5rem 1rem 1.25rem;
+                gap: 0.75rem;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+            }
+            .rail-card {
+                flex: 0 0 78vw;
+                max-width: 280px;
+                min-height: 170px;
+                padding: 1rem;
+                scroll-snap-align: start;
+            }
+            .rail-card:active {
+                transform: scale(0.98);
+                transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+            .rail-card.selected {
+                transform: none;
+            }
+            .rail-card-name { font-size: 0.9rem; }
+            .rail-card-desc { font-size: 0.65rem; }
+            .rail-card-price { font-size: 1.1rem; }
+            .rail-card-add { width: 30px; height: 30px; font-size: 0.9rem; }
+            .locations-section { padding: 4rem 1.5rem; }
+            .location-card { padding: 1.5rem; }
+            .footer { padding: 3rem 1.5rem 1.5rem; }
+            .footer-top { gap: 2rem; padding-bottom: 2rem; margin-bottom: 2rem; }
+            .footer-contact-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+            .footer-bottom { flex-direction: column; gap: 0.75rem; text-align: center; }
+            .cart-drawer { max-width: 100%; }
+            .marquee-item { font-size: 0.9rem; gap: 2rem; }
+            .toast { bottom: 5.5rem; }
+            .order-strip { padding: 0.75rem 1rem; }
+            .order-strip-count { font-size: 0.7rem; }
+            .order-strip-total { font-size: 1.1rem; }
+            .order-strip-btn { padding: 0.65rem 1.25rem; font-size: 0.6rem; }
+        }
+
+        @media (min-width: 769px) and (max-width: 1100px) {
+            .nav-links { gap: 1.5rem; }
+            .header-inner { padding: 1rem 2rem; }
+            .logo-main { font-size: 1.4rem; }
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            z-index: 10000;
+            border-radius: 0 0 0.5rem 0.5rem;
+            transition: top 0.3s ease;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
+</head>
+<body class="is-loading">
+    <a href="#menu" class="skip-link">Skip to menu</a>
+    <div class="page-transition" id="pageTransition" aria-hidden="true">
+        <div class="page-transition-inner">
+            <div class="page-transition-logo">VOYA HOUSE</div>
+            <div class="page-transition-tagline">Every sip, a new trip</div>
+            <div class="page-transition-line"></div>
+        </div>
+    </div>
+    <!-- ===== HEADER ===== -->
+    <header id="header">
+        <div class="header-inner">
+            <div class="header-left">
+                <ul class="nav-links nav-desktop">
+                    <li><a href="#story">Story</a></li>
+                    <li><a href="#moods">Brands</a></li>
+                </ul>
+            </div>
+            <div class="header-center">
+                <a href="#home" class="logo-main">VOYA HOUSE</a>
+                <div class="logo-tagline">Every sip, a new trip</div>
+            </div>
+            <div class="header-right">
+                <ul class="nav-links nav-desktop">
+                    <li><a href="#menu">Menu</a></li>
+                    <li><a href="#locations">Locations</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <button class="cart-btn" onclick="toggleCart()" aria-label="Open cart">
+                    Cart <span class="cart-count" id="cartCount" aria-live="polite" aria-atomic="true">0</span>
+                </button>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>
+            </div>
+        </div>
+        <!-- Mobile nav dropdown - separate from desktop nav so it's never hidden by parent -->
+        <nav class="mobile-nav" id="mobileNav">
+            <ul>
+                <li><a href="#story">Story</a></li>
+                <li><a href="#moods">Brands</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#locations">Locations</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ===== HERO ===== -->
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="hero-circle hero-circle--1"></div>
+        <div class="hero-circle hero-circle--2"></div>
+        <div class="hero-content">
+            <div class="hero-eyebrow">Welcome to Voya House</div>
+            <h1 class="hero-title">
+                <span class="hero-title-line"><span>Every sip,</span></span>
+                <span class="hero-title-line"><span class="italic">a new trip.</span></span>
+            </h1>
+            <p class="hero-description">Voya House brings specialty coffee, healthy food, and comfort classics into one warm everyday destination.</p>
+            <div class="hero-ctas">
+                <a href="#menu" class="btn-primary">Explore Menu</a>
+                <a href="https://wa.me/201050000598" target="_blank" class="btn-secondary">Order on WhatsApp</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== MARQUEE ===== -->
+    <div class="marquee" aria-hidden="true">
+        <div class="marquee-track">
+            <span class="marquee-item">Specialty Coffee <span class="marquee-dot"></span> Healthy Food <span class="marquee-dot"></span> Comfort Food <span class="marquee-dot"></span> Every Sip, A New Trip <span class="marquee-dot"></span></span>
+            <span class="marquee-item">Specialty Coffee <span class="marquee-dot"></span> Healthy Food <span class="marquee-dot"></span> Comfort Food <span class="marquee-dot"></span> Every Sip, A New Trip <span class="marquee-dot"></span></span>
+        </div>
+    </div>
+
+    <!-- ===== STORY ===== -->
+    <section class="story-section section-motion" id="story">
+        <div class="story-container">
+            <div class="story-heading reveal">
+                A House Built Around <span>Everyday</span> Moments
+            </div>
+            <div class="story-text reveal">
+                <p>Voya House is built around everyday rituals: coffee after movement, food with family, and small moments that feel like home.</p>
+                <p>Created as a gathering place for coffee lovers, families, and people seeking balance, Voya House brings together specialty coffee, healthy food, and comfort experiences under one identity.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== THREE MOODS ===== -->
+    <section class="moods-section section-motion" id="moods">
+        <div class="moods-header reveal">
+            <div class="moods-eyebrow">The House of Three Moods</div>
+            <h2 class="moods-title">One House, Three Worlds</h2>
+        </div>
+        <div class="moods-grid">
+            <div class="mood-card mood-card--voya reveal-scale stagger-item">
+                <div class="mood-card-bg-text">VOYA</div>
+                <div class="mood-card-name">VOYA</div>
+                <div class="mood-card-subtitle">Specialty Coffee</div>
+                <p class="mood-card-desc">Everyday rituals, crafted cups, warm energy.</p>
+                <button class="mood-card-btn" onclick="switchToMenu('voya')">Explore Coffee</button>
+            </div>
+            <div class="mood-card mood-card--papa reveal-scale stagger-item">
+                <div class="mood-card-bg-text">PAPA</div>
+                <div class="mood-card-name">Papa Voya</div>
+                <div class="mood-card-subtitle">Healthy Food</div>
+                <p class="mood-card-desc">Balanced bowls, mindful plates, fresh ingredients.</p>
+                <button class="mood-card-btn" onclick="switchToMenu('papa')">Explore Healthy</button>
+            </div>
+            <div class="mood-card mood-card--mama reveal-scale stagger-item">
+                <div class="mood-card-bg-text">MAMA</div>
+                <div class="mood-card-name">Mama Voya</div>
+                <div class="mood-card-subtitle">Comfort Food</div>
+                <p class="mood-card-desc">Familiar flavors, indulgent dishes, shared moments.</p>
+                <button class="mood-card-btn" onclick="switchToMenu('mama')">Explore Comfort</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== MENU ===== -->
+    <section class="menu-section section-motion" id="menu">
+        <div class="menu-header reveal">
+            <div class="menu-eyebrow">Discover</div>
+            <h2 class="menu-title">The Menu House</h2>
+            <p class="menu-subtitle">Choose your room, explore the mood, and send your order through WhatsApp.</p>
+        </div>
+
+        <div class="brand-switch" id="brandSwitch"></div>
+        <div id="roomIntro"></div>
+        <div class="category-bar">
+            <button type="button" class="category-nav-btn" onclick="scrollCategories(-1)" aria-label="Previous categories">&lsaquo;</button>
+            <div class="category-chips" id="categoryChips"></div>
+            <button type="button" class="category-nav-btn" onclick="scrollCategories(1)" aria-label="Next categories">&rsaquo;</button>
+        </div>
+        <div class="menu-content-area" id="menuContent"></div>
+    </section>
+
+    <!-- ===== LOCATIONS ===== -->
+    <section class="locations-section section-motion" id="locations">
+        <div class="locations-container">
+            <div class="locations-header reveal">
+                <div class="locations-eyebrow">Find Us</div>
+                <h2 class="locations-title">Voya House</h2>
+                <p class="locations-desc">Strategically positioned within Egypt's premium athletic and social institutions.</p>
+            </div>
+            <div class="locations-grid">
+                <!-- Location Card 1 - TODO: Replace href with real Google Maps link -->
+                <div class="location-card reveal stagger-item">
+                    <div class="location-icon">&#9737;</div>
+                    <div class="location-name">Al Ahly Sporting Club</div>
+                    <div class="location-detail">Gezira Branch</div>
+                    <button type="button" class="location-btn" disabled>View Location</button>
+                </div>
+                <!-- Location Card 2 - TODO: Replace href with real Google Maps link -->
+                <div class="location-card reveal stagger-item">
+                    <div class="location-icon">&#9737;</div>
+                    <div class="location-name">Al Ahly Sporting Club</div>
+                    <div class="location-detail">Nasr City Branch</div>
+                    <button type="button" class="location-btn" disabled>View Location</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER / CONTACT ===== -->
+    <footer class="footer section-motion" id="contact">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-brand reveal">
+                    <div class="footer-brand-logo">VOYA HOUSE</div>
+                    <div class="footer-brand-tagline">Every sip, a new trip</div>
+                </div>
+                <div class="footer-contact-grid">
+                    <div class="footer-contact-item stagger-item">
+                        <div class="footer-contact-label">Phone</div>
+                        <div class="footer-contact-value"><a href="tel:+201050000598">+20 105 000 0598</a></div>
+                    </div>
+                    <div class="footer-contact-item stagger-item">
+                        <div class="footer-contact-label">Email</div>
+                        <div class="footer-contact-value"><a href="mailto:Islam@voyahouse.com">Islam@voyahouse.com</a></div>
+                    </div>
+                    <div class="footer-contact-item stagger-item">
+                        <div class="footer-contact-label">Website</div>
+                        <div class="footer-contact-value"><a href="https://voyahouse.com">voyahouse.com</a></div>
+                    </div>
+                    <div class="footer-contact-item stagger-item">
+                        <div class="footer-contact-label">Instagram</div>
+                        <div class="footer-contact-value"><a href="https://instagram.com/voyahouse">@voyahouse</a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>&copy; 2026 Voya House. All rights reserved.</span>
+                <span>Specialty Coffee &middot; Healthy Food &middot; Comfort Food</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== CART DRAWER ===== -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3 class="cart-title">Your Order</h3>
+            <button class="cart-close" id="cartClose" onclick="toggleCart()" aria-label="Close cart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <div class="cart-empty">
+                <div class="cart-empty-icon">&#9749;</div>
+                <div>Your cart is empty</div>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span class="cart-total-label">Total</span>
+                <span class="cart-total-value" id="cartTotal">0 <span style="font-size:0.75rem">EGP</span></span>
+            </div>
+            <button class="whatsapp-btn" onclick="orderOnWhatsApp()" id="whatsappBtn" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Order on WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== STICKY ORDER STRIP ===== -->
+    <div class="order-strip" id="orderStrip">
+        <div class="order-strip-info">
+            <span class="order-strip-count" id="orderStripCount">0 items</span>
+            <span class="order-strip-total" id="orderStripTotal">0 <span>EGP</span></span>
+        </div>
+        <button class="order-strip-btn" onclick="toggleCart()">View Order</button>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        (function() {
+        // ===== MENU DATA =====
+        const menuData = {
+            voya: {
+                name: "VOYA Coffee & Drinks",
+                subtitle: "Specialty coffee culture, quality, everyday rituals",
+                categories: [
+                    { name: "Hot Coffee", products: [
+                        {name:"Espresso Single",price:35},{name:"Espresso Double",price:45},{name:"Machiato Single",price:45},{name:"Machiato Double",price:50},{name:"Flat White",price:60},{name:"Cortado",price:60},{name:"Americano",price:60},{name:"Cappuccino",price:80},{name:"Latte",price:80},{name:"Turkish Coffee Single",price:25},{name:"Turkish Coffee Double",price:35}
+                    ]},
+                    { name: "Hot Beverage Flavour", products: [
+                        {name:"Spanish Latte",price:100},{name:"White Mocha",price:100},{name:"Mocha Latte",price:100},{name:"Salted Caramel",price:100},{name:"Caramel Machiato",price:100},{name:"Peanut Latte",price:105},{name:"Pistachio Latte",price:105},{name:"Lotus Latte",price:105},{name:"Nutella Latte",price:105},{name:"French Coffee",price:40},{name:"Hazelnut Coffee",price:40}
+                    ]},
+                    { name: "Hot Beverage Without Coffee", products: [
+                        {name:"Classic Matcha",price:105},{name:"White Matcha",price:105},{name:"Spanish Matcha",price:105},{name:"Hot Chocolate",price:90},{name:"White Hot Chocolate",price:90},{name:"Red Tea",price:25},{name:"Green Tea",price:25}
+                    ]},
+                    { name: "Cold Beverage Cubes", products: [
+                        {name:"Ice Americano",price:60},{name:"Ice Latte",price:80},{name:"Ice Spanish",price:100},{name:"Ice Mocha",price:100},{name:"Ice White Mocha",price:100},{name:"Ice Caramel Machiato",price:100},{name:"Ice Salted Caramel",price:100},{name:"Ice Banana Coffee",price:100},{name:"Ice Vanilla Double Cream",price:105},{name:"Ice Pistachio Latte",price:105},{name:"Ice Nutella Latte",price:105}
+                    ]},
+                    { name: "Cold Beverage Milk Blend", products: [
+                        {name:"Lotus Milkshake",price:70},{name:"Pistachio Milkshake",price:80},{name:"Nutella Milkshake",price:70},{name:"Blueberry Milkshake",price:70},{name:"Peach Milkshake",price:70},{name:"Chocolate Milkshake",price:70},{name:"Vanilla Milkshake",price:70},{name:"Caramel Milkshake",price:70}
+                    ]},
+                    { name: "Cold Beverage Frappe", products: [
+                        {name:"Coffee Frappe",price:100},{name:"Caramel Frappe",price:105},{name:"Mocha Frappe",price:105},{name:"White Mocha Frappe",price:105},{name:"Spanish Frappe",price:105},{name:"Salted Caramel Frappe",price:105},{name:"Pistachio Frappe",price:105},{name:"Lotus Frappe",price:105},{name:"Nutella Frappe",price:105},{name:"Banana Coffee Frappe",price:105}
+                    ]},
+                    { name: "Other Drinks", products: [
+                        {name:"Classic Energy",price:105},{name:"Coco Berry",price:105},{name:"Redbull Passion",price:105},{name:"Redbull Peach",price:105},{name:"Humer Head",price:70},{name:"Ice Cream 1 Scoop",price:20},{name:"Ice Cream 3 Scoop",price:50},{name:"Banana Split",price:70},{name:"Cola",price:30},{name:"Schweppes",price:30},{name:"V Cola",price:30},{name:"Small Water",price:10},{name:"Red Bull",price:70},{name:"Fayrouz",price:30},{name:"Birell",price:30}
+                    ]},
+                    { name: "Dessert", products: [
+                        {name:"Cheese Cake",price:110},{name:"Tiramisu",price:110},{name:"Honey Cake",price:110},{name:"Brownies",price:80},{name:"Plain Croissant",price:60},{name:"Triple Chocolate",price:120},{name:"Chocolate Eclair",price:80},{name:"Pain Suisse Chocolate",price:80},{name:"Double Chocolate Cookies",price:70},{name:"Classic Cookies",price:70},{name:"Chocolate Muffin",price:80},{name:"Vanilla Muffin",price:80}
+                    ]},
+                    { name: "Mojito", products: [
+                        {name:"Classic Mojito",price:80},{name:"Blueberry Mojito",price:80},{name:"Green Apple Mojito",price:80},{name:"Passion Mojito",price:80},{name:"Peach Mojito",price:80},{name:"Strawberry Mojito",price:80},{name:"Pineapple Strawberry Mojito",price:80},{name:"Raspberry Mojito",price:80}
+                    ]},
+                    { name: "Ice Tea", products: [
+                        {name:"Peach Ice Tea",price:70},{name:"Blueberry Ice Tea",price:70},{name:"Green Apple Ice Tea",price:70}
+                    ]},
+                    { name: "Juice", products: [
+                        {name:"Orange",price:60},{name:"Mango",price:60},{name:"Strawberry",price:60},{name:"Guava",price:60},{name:"Lemon Mint",price:50},{name:"Florida",price:70},{name:"Avocado",price:80},{name:"Kiwi",price:80}
+                    ]},
+                    { name: "Matcha", products: [
+                        {name:"Ice Classic Matcha",price:105},{name:"Ice White Matcha",price:105},{name:"Ice Strawberry Matcha",price:105},{name:"Ice Spanish Matcha",price:105}
+                    ]}
+                ]
+            },
+            papa: {
+                name: "Papa Voya",
+                subtitle: "Balanced healthy dining, mindful food choices",
+                categories: [
+                    { name: "Main Dishes", products: [
+                        {name:"Chicken Yogurt Salad",price:235,desc:"Lettuce, bell pepper, avocado, sweet corn, cherry tomatoes, red beans, red cabbage, grilled chicken, lemon dill sauce."},
+                        {name:"Tuna Salad",price:310,desc:"Lettuce, red onion, cherry tomatoes, boiled potato cubes, boiled eggs, olive, tuna, honey coriander sauce."},
+                        {name:"Quinoa Salad",price:270,desc:"Quinoa, lettuce, avocado, tomato, onion, orange, mango, coriander."},
+                        {name:"Alfredo Pasta",price:250,desc:"Oat pasta, heavy cream, grilled bell pepper, parmesan cheese, grilled chicken."},
+                        {name:"Beet Pasta",price:230,desc:"Oat pasta, parmesan cheese, grilled chicken, beetroot sauce."},
+                        {name:"Protein Burger",price:230,desc:"Burger patty, egg, lettuce, brown toast, honey sauce. Served with side salad."},
+                        {name:"Avocado Burger",price:240,desc:"Burger patty, lettuce, cherry tomatoes, cucumber, carrots, guacamole, cheese slices, honey sauce."},
+                        {name:"Chicken Lemon",price:240,desc:"Grilled chicken breasts, olive oil, lemon sauce, onions, oregano. Served with side dish: mashed potatoes or white rice."},
+                        {name:"Chicken Coconut",price:270,desc:"Grilled chicken breasts, coconut sauce. Served with side dish: mashed potatoes or white rice."}
+                    ]}
+                ]
+            },
+            mama: {
+                name: "Mama Voya",
+                subtitle: "Comfort food, indulgent dishes, familiar flavors",
+                categories: [
+                    { name: "Main Courses", note: "All main courses are served with two sides of sauteed vegetables, rice, or fries.", products: [
+                        {name:"Grilled Chicken",price:240},{name:"Two Way Chicken",price:260},{name:"Cordon Bleu",price:270},{name:"Chicken Fajita",price:280},{name:"Beef Fillet",price:360},{name:"Beef Stroganoff",price:360}
+                    ]},
+                    { name: "Salads", products: [
+                        {name:"Caesar Salad",price:110},{name:"Greek Salad",price:140},{name:"Chicken Caesar Salad",price:150},{name:"Waldorf Salad",price:240}
+                    ]},
+                    { name: "Pasta", products: [
+                        {name:"Arrabbiata Pasta",price:140},{name:"Bolognese Pasta",price:160},{name:"Alfredo Pasta",price:190},{name:"Pesto Pasta",price:195},{name:"Negresco Pasta",price:220},{name:"Mac and Cheese Pasta",price:220},{name:"Steak Pasta",price:270}
+                    ]},
+                    { name: "Pizza", products: [
+                        {name:"Margherita Pizza",price:130},{name:"Vegetable Pizza",price:180},{name:"Funghi Pizza",price:180},{name:"Quattro Pizza",price:190},{name:"Super Supreme Pizza",price:190},{name:"Pepperoni Pizza",price:195},{name:"BBQ Pizza",price:210},{name:"Ranch Pizza",price:220}
+                    ]},
+                    { name: "Cold Cuts", products: [
+                        {name:"Turkey Sandwich",price:120},{name:"Bacon Cheese Sandwich",price:120},{name:"Pepperoni Cheese Sandwich",price:120},{name:"Club Sandwich",price:230}
+                    ]},
+                    { name: "Burger", products: [
+                        {name:"Classic Burger",price:215},{name:"Voya Burger",price:250},{name:"Juicy Lucy",price:250},{name:"Mushroom Burger",price:260}
+                    ]},
+                    { name: "Sandwiches", products: [
+                        {name:"Quesadilla Sandwich",price:155},{name:"Funghi Sandwich",price:155},{name:"Crispy Chicken Sandwich",price:165},{name:"Fried Chicken Sandwich",price:175}
+                    ]}
+                ]
+            }
+        };
+
+        let cart = [];
+        let currentBrand = 'voya';
+        let currentCategoryIndex = 0;
+        let currentProductIndex = 0;
+
+        const brandInfo = {
+            voya: {
+                title: 'VOYA Room',
+                subtitle: 'Specialty coffee for everyday rituals.',
+                desc: 'Crafted cups, warm energy, and the small daily moments that turn into a trip.',
+                fallbackDesc: 'A Voya favorite from the coffee room.'
+            },
+            papa: {
+                title: 'Papa Voya Room',
+                subtitle: 'Balanced plates, fresh energy, mindful choices.',
+                desc: 'Healthy food with color, freshness, and enough comfort to keep it joyful.',
+                fallbackDesc: 'A balanced choice from Papa Voya.'
+            },
+            mama: {
+                title: 'Mama Voya Room',
+                subtitle: 'Comfort classics made for sharing.',
+                desc: 'Familiar flavors, generous plates, and the warm side of Voya House.',
+                fallbackDesc: 'A comfort pick from Mama Voya.'
+            }
+        };
+
+        // ===== PAGE LOAD =====
+        function handlePageLoad() {
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (!reducedMotion) {
+                const transition = document.getElementById('pageTransition');
+                if (transition) transition.classList.add('is-exiting');
+                setTimeout(() => {
+                    document.body.classList.add('is-loaded');
+                }, 1800);
+                setTimeout(() => {
+                    if (transition) transition.remove();
+                }, 4000);
+            } else {
+                document.body.classList.add('is-loaded');
+                const transition = document.getElementById('pageTransition');
+                if (transition) transition.remove();
+            }
+        }
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            handlePageLoad();
+        } else {
+            window.addEventListener('load', handlePageLoad);
+        }
+
+        // ===== INIT =====
+        document.addEventListener('DOMContentLoaded', () => {
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (!reducedMotion) {
+                document.body.classList.add('motion-ready');
+            }
+            setupHeaderScroll();
+            setupSmoothScroll();
+            setupScrollReveal();
+            initMenu();
+            updateCartUI();
+            initRailDragScroll();
+        });
+
+        function initMenu() {
+            currentBrand = 'voya';
+            currentCategoryIndex = 0;
+            currentProductIndex = 0;
+            renderBrandSwitch();
+            renderRoomIntro();
+            renderCategoryChips();
+            renderMenuContent();
+        }
+
+        function renderBrandSwitch() {
+            const container = document.getElementById('brandSwitch');
+            const brands = [
+                { key: 'voya', name: 'VOYA', label: 'Coffee & Drinks' },
+                { key: 'papa', name: 'Papa Voya', label: 'Healthy Food' },
+                { key: 'mama', name: 'Mama Voya', label: 'Comfort Food' }
+            ];
+            container.innerHTML = brands.map(b => `
+                <button type="button" class="brand-room brand-room--${b.key} stagger-item ${b.key === currentBrand ? 'active' : ''}"
+                        onclick="switchBrand('${b.key}')"
+                        aria-pressed="${b.key === currentBrand}">
+                    <span class="brand-room-name">${b.name}</span>
+                    <span class="brand-room-label">${b.label}</span>
+                </button>
+            `).join('');
+            refreshRevealItems();
+        }
+
+        function renderRoomIntro() {
+            const container = document.getElementById('roomIntro');
+            const info = brandInfo[currentBrand];
+            container.innerHTML = `
+                <div class="room-intro room-intro--${currentBrand}">
+                    <h3 class="room-intro-title">${info.title}</h3>
+                    <p class="room-intro-subtitle">${info.subtitle}</p>
+                    <p class="room-intro-desc">${info.desc}</p>
+                </div>
+            `;
+        }
+
+        function renderCategoryChips() {
+            const container = document.getElementById('categoryChips');
+            const data = menuData[currentBrand];
+            if (!data) return;
+            container.innerHTML = data.categories.map((cat, idx) => `
+                <button type="button" class="category-chip stagger-item ${idx === currentCategoryIndex ? 'active' : ''}"
+                        onclick="switchCategory(${idx})"
+                        aria-pressed="${idx === currentCategoryIndex}">
+                    ${cat.name} <span class="category-chip-count">${cat.products.length}</span>
+                </button>
+            `).join('');
+            refreshRevealItems();
+        }
+
+        function renderMenuContent(preserveScroll = false) {
+            const container = document.getElementById('menuContent');
+            const data = menuData[currentBrand];
+            if (!data) return;
+
+            const category = data.categories[currentCategoryIndex];
+            if (!category) return;
+
+            const products = category.products;
+            if (currentProductIndex >= products.length) currentProductIndex = 0;
+
+            const oldRail = document.getElementById('productRail');
+            const savedScroll = preserveScroll && oldRail ? oldRail.scrollLeft : 0;
+
+            const railHtml = products.map((prod, idx) => {
+                const ci = cart.find(i => i.name === prod.name);
+                const qty = ci ? ci.qty : 0;
+                const delay = idx * 60;
+                return `
+                    <div class="rail-card ${idx === currentProductIndex ? 'selected' : ''} is-entering" style="animation-delay: ${delay}ms" onclick="selectProduct(${idx})">
+                        <div class="rail-card-name">${prod.name}</div>
+                        ${prod.desc ? `<div class="rail-card-desc">${prod.desc}</div>` : ''}
+                        <div class="rail-card-cat">${category.name}</div>
+                        <div class="rail-card-bottom">
+                            <div class="rail-card-price">${prod.price} <span style="font-size:0.6rem;font-weight:400;opacity:0.6">EGP</span></div>
+                            ${qty > 0 ? `
+                                <div class="rail-card-qty">
+                                    <button type="button" class="rail-card-qty-btn" onclick="event.stopPropagation();updateQty('${prod.name}',-1)" aria-label="Decrease quantity">&minus;</button>
+                                    <span class="rail-card-qty-val">${qty}</span>
+                                    <button type="button" class="rail-card-qty-btn" onclick="event.stopPropagation();updateQty('${prod.name}',1)" aria-label="Increase quantity">+</button>
+                                </div>
+                            ` : `
+                                <button type="button" class="rail-card-add" onclick="event.stopPropagation();addToCart('${prod.name}',${prod.price})" aria-label="Add ${prod.name}">+</button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="product-rail-section">
+                    <div class="product-rail-header">
+                        <div class="product-rail-title">${category.name} &middot; ${products.length} item${products.length !== 1 ? 's' : ''}</div>
+                        <div class="product-rail-nav">
+                            <button type="button" class="product-rail-btn" onclick="scrollRail(-1)" aria-label="Previous products">&lsaquo;</button>
+                            <button type="button" class="product-rail-btn" onclick="scrollRail(1)" aria-label="Next products">&rsaquo;</button>
+                        </div>
+                    </div>
+                    <div class="product-rail" id="productRail">${railHtml}</div>
+                </div>
+            `;
+
+            if (preserveScroll) {
+                const newRail = document.getElementById('productRail');
+                if (newRail) newRail.scrollLeft = savedScroll;
+            }
+
+            refreshRevealItems();
+        }
+
+        function switchBrand(brand) {
+            if (brand === currentBrand) return;
+            currentBrand = brand;
+            currentCategoryIndex = 0;
+            currentProductIndex = 0;
+            renderBrandSwitch();
+            renderRoomIntro();
+            renderCategoryChips();
+            const chips = document.getElementById('categoryChips');
+            if (chips) chips.scrollLeft = 0;
+            renderMenuContent();
+        }
+
+        function switchCategory(idx) {
+            currentCategoryIndex = idx;
+            currentProductIndex = 0;
+            renderCategoryChips();
+            renderMenuContent();
+            requestAnimationFrame(centerActiveCategoryChip);
+        }
+
+        function selectProduct(idx) {
+            if (idx === currentProductIndex) return;
+            currentProductIndex = idx;
+            const rail = document.getElementById('productRail');
+            if (!rail) return;
+            rail.querySelectorAll('.rail-card').forEach((card, i) => {
+                card.classList.toggle('selected', i === idx);
+            });
+        }
+
+        function scrollRail(dir) {
+            const rail = document.getElementById('productRail');
+            const firstCard = rail ? rail.querySelector('.rail-card') : null;
+            if (!rail || !firstCard) return;
+            const styles = getComputedStyle(rail);
+            const gap = parseFloat(styles.columnGap || styles.gap || 0);
+            const amount = firstCard.offsetWidth + gap;
+            rail.scrollBy({ left: dir * amount, behavior: 'smooth' });
+        }
+
+        function initRailDragScroll() {
+            const rail = document.getElementById('productRail');
+            if (!rail) return;
+            let isDragging = false;
+            let startX = 0;
+            let scrollLeft = 0;
+
+            rail.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'touch') return;
+                isDragging = true;
+                startX = e.pageX - rail.offsetLeft;
+                scrollLeft = rail.scrollLeft;
+                rail.style.cursor = 'grabbing';
+                rail.setPointerCapture(e.pointerId);
+            });
+
+            rail.addEventListener('pointermove', (e) => {
+                if (!isDragging) return;
+                if (e.pointerType === 'touch') return;
+                e.preventDefault();
+                const x = e.pageX - rail.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                rail.scrollLeft = scrollLeft - walk;
+            });
+
+            rail.addEventListener('pointerup', () => {
+                isDragging = false;
+                rail.style.cursor = '';
+            });
+
+            rail.addEventListener('pointercancel', () => {
+                isDragging = false;
+                rail.style.cursor = '';
+            });
+        }
+
+        function scrollCategories(dir) {
+            const chips = document.getElementById('categoryChips');
+            if (!chips) return;
+            chips.scrollBy({ left: dir * 240, behavior: 'smooth' });
+        }
+
+        function centerActiveCategoryChip() {
+            const chips = document.getElementById('categoryChips');
+            const active = chips?.querySelector('.category-chip.active');
+            if (!chips || !active) return;
+            const targetLeft = active.offsetLeft - (chips.clientWidth - active.offsetWidth) / 2;
+            chips.scrollTo({
+                left: Math.max(0, targetLeft),
+                behavior: 'smooth'
+            });
+        }
+
+        // Alias for backward compatibility with mood card buttons
+        function switchToMenu(brand) {
+            switchBrand(brand);
+            document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        let revealObserver = null;
+        let motionEnabled = true;
+
+        function setupScrollReveal() {
+            motionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (!motionEnabled) {
+                document.querySelectorAll('.reveal, .reveal-scale, .stagger-item, .reveal-mask, .text-reveal, .section-motion').forEach(el => {
+                    el.classList.add('visible');
+                });
+                return;
+            }
+            if (revealObserver) {
+                revealObserver.disconnect();
+            }
+            revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const el = entry.target;
+                    if (el.classList.contains('stagger-item')) {
+                        const parent = el.parentElement;
+                        const siblings = parent ? Array.from(parent.querySelectorAll('.stagger-item')) : [];
+                        const idx = siblings.indexOf(el);
+                        el.style.transitionDelay = `${Math.min(idx * 80, 450)}ms`;
+                    }
+                    el.classList.add('visible');
+                    revealObserver.unobserve(el);
+                });
+            }, {
+                threshold: 0.12,
+                rootMargin: '0px 0px -8% 0px'
+            });
+            refreshRevealItems();
+        }
+
+        function refreshRevealItems(scope) {
+            if (!motionEnabled) return;
+            const target = scope || document;
+            const items = target.querySelectorAll('.reveal:not(.visible), .reveal-scale:not(.visible), .stagger-item:not(.visible), .reveal-mask:not(.visible), .text-reveal:not(.visible), .section-motion:not(.visible)');
+            items.forEach(item => {
+                if (item.dataset.revealReady === 'true') return;
+                item.dataset.revealReady = 'true';
+                if (revealObserver) {
+                    revealObserver.observe(item);
+                }
+            });
+        }
+
+        function setupHeaderScroll() {
+            let ticking = false;
+            const isMobile = () => window.innerWidth < 769;
+            window.addEventListener('scroll', () => {
+                document.getElementById('header').classList.toggle('scrolled', window.scrollY > 60);
+                if (!ticking) {
+                    requestAnimationFrame(() => {
+                        if (!isMobile()) {
+                            const y = window.scrollY;
+                            document.documentElement.style.setProperty('--parallax-y', `${y * 0.08}px`);
+                            document.documentElement.style.setProperty('--parallax-x', `${(window.innerWidth / 2 - window.scrollX) * 0.02}px`);
+                        }
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            });
+        }
+
+        function setupSmoothScroll() {
+            document.querySelectorAll('a[href^="#"]').forEach(a => {
+                a.addEventListener('click', e => {
+                    e.preventDefault();
+                    const t = document.querySelector(a.getAttribute('href'));
+                    if (t) t.scrollIntoView({ behavior: 'smooth' });
+                    closeMobileMenu();
+                });
+            });
+        }
+
+        function toggleMobileMenu() {
+            const nav = document.getElementById('mobileNav');
+            const btn = document.getElementById('mobileMenuBtn');
+            const isOpen = nav.classList.toggle('open');
+            btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        }
+
+        function closeMobileMenu() {
+            const nav = document.getElementById('mobileNav');
+            const btn = document.getElementById('mobileMenuBtn');
+            nav.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+
+        // ===== CART =====
+        function addToCart(name, price) {
+            const existing = cart.find(i => i.name === name);
+            if (existing) existing.qty++;
+            else cart.push({ name, price, qty: 1 });
+            updateCartUI();
+            updateRailCards();
+            showToast(`${name} added to cart`);
+        }
+
+        function updateQty(name, change) {
+            const item = cart.find(i => i.name === name);
+            if (item) {
+                item.qty += change;
+                if (item.qty <= 0) cart = cart.filter(i => i.name !== name);
+            }
+            updateCartUI();
+            updateRailCards();
+        }
+
+        function updateRailCards() {
+            const rail = document.getElementById('productRail');
+            if (!rail) return;
+            rail.querySelectorAll('.rail-card').forEach(card => {
+                const name = card.querySelector('.rail-card-name')?.textContent;
+                if (!name) return;
+                const ci = cart.find(i => i.name === name);
+                const qty = ci ? ci.qty : 0;
+                const bottom = card.querySelector('.rail-card-bottom');
+                if (!bottom) return;
+                if (qty > 0) {
+                    bottom.innerHTML = `
+                        <div class="rail-card-price">${ci.price} <span style="font-size:0.6rem;font-weight:400;opacity:0.6">EGP</span></div>
+                        <div class="rail-card-qty">
+                            <button type="button" class="rail-card-qty-btn" onclick="event.stopPropagation();updateQty('${name}',-1)" aria-label="Decrease quantity">&minus;</button>
+                            <span class="rail-card-qty-val">${qty}</span>
+                            <button type="button" class="rail-card-qty-btn" onclick="event.stopPropagation();updateQty('${name}',1)" aria-label="Increase quantity">+</button>
+                        </div>
+                    `;
+                } else {
+                    const priceEl = card.querySelector('.rail-card-price');
+                    const price = priceEl ? parseInt(priceEl.textContent) : 0;
+                    bottom.innerHTML = `
+                        <div class="rail-card-price">${price} <span style="font-size:0.6rem;font-weight:400;opacity:0.6">EGP</span></div>
+                        <button type="button" class="rail-card-add" onclick="event.stopPropagation();addToCart('${name}',${price})" aria-label="Add ${name}">+</button>
+                    `;
+                }
+            });
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(i => i.name !== name);
+            updateCartUI();
+            updateRailCards();
+        }
+
+        function updateCartUI() {
+            const count = cart.reduce((s, i) => s + i.qty, 0);
+            const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            document.getElementById('cartCount').textContent = count;
+            document.getElementById('cartTotal').innerHTML = `${total} <span style="font-size:0.75rem">EGP</span>`;
+            document.getElementById('whatsappBtn').disabled = cart.length === 0;
+
+            const orderStrip = document.getElementById('orderStrip');
+            const drawerOpen = document.getElementById('cartDrawer').classList.contains('open');
+            if (count > 0 && !drawerOpen) {
+                orderStrip.classList.add('show');
+                document.body.classList.add('order-strip-visible');
+                document.getElementById('orderStripCount').textContent = count + ' item' + (count !== 1 ? 's' : '');
+                document.getElementById('orderStripTotal').innerHTML = total + ' <span>EGP</span>';
+            } else {
+                orderStrip.classList.remove('show');
+                document.body.classList.remove('order-strip-visible');
+            }
+
+            const itemsEl = document.getElementById('cartItems');
+            if (cart.length === 0) {
+                itemsEl.innerHTML = '<div class="cart-empty"><div class="cart-empty-icon">&#9749;</div><div>Your cart is empty</div></div>';
+            } else {
+                itemsEl.innerHTML = cart.map(item => `<div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-unit">${item.price} EGP each</div>
+                        <div class="cart-item-controls">
+                            <button class="cart-item-qty-btn" onclick="updateQty('${item.name}',-1)" aria-label="Decrease">&minus;</button>
+                            <span class="cart-item-qty">${item.qty}</span>
+                            <button class="cart-item-qty-btn" onclick="updateQty('${item.name}',1)" aria-label="Increase">+</button>
+                            <button class="cart-item-remove" onclick="removeFromCart('${item.name}')">Remove</button>
+                        </div>
+                    </div>
+                    <div class="cart-item-total">${item.price * item.qty} EGP</div>
+                </div>`).join('');
+            }
+        }
+
+        function trapFocus(e) {
+            const drawer = document.getElementById('cartDrawer');
+            if (!drawer.classList.contains('open')) return;
+            const focusable = drawer.querySelectorAll('button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+            if (focusable.length === 0) return;
+            const first = focusable[0];
+            const last = focusable[focusable.length - 1];
+            if (e.key === 'Tab') {
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+            if (e.key === 'Escape') {
+                toggleCart();
+            }
+        }
+
+        function toggleCart() {
+            document.getElementById('cartOverlay').classList.toggle('open');
+            document.getElementById('cartDrawer').classList.toggle('open');
+            const drawerOpen = document.getElementById('cartDrawer').classList.contains('open');
+            document.body.style.overflow = drawerOpen ? 'hidden' : '';
+            if (drawerOpen) {
+                document.addEventListener('keydown', trapFocus);
+                document.getElementById('cartClose')?.focus();
+            } else {
+                document.removeEventListener('keydown', trapFocus);
+            }
+            const count = cart.reduce((s, i) => s + i.qty, 0);
+            const orderStrip = document.getElementById('orderStrip');
+            if (count > 0 && !drawerOpen) {
+                orderStrip.classList.add('show');
+            } else {
+                orderStrip.classList.remove('show');
+            }
+        }
+
+        function orderOnWhatsApp() {
+            if (cart.length === 0) return;
+            let msg = 'Hello Voya House, I want to order:\n\n';
+            cart.forEach(i => msg += `${i.qty}x ${i.name} - ${i.price * i.qty} EGP\n`);
+            const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            msg += `\nTotal: ${total} EGP`;
+            window.open(`https://wa.me/201050000598?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+        })();
+    </script>
+</body>
+</html>
