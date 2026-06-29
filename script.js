@@ -120,13 +120,18 @@
             const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (!reducedMotion) {
                 const transition = document.getElementById('pageTransition');
-                if (transition) transition.classList.add('is-exiting');
+                // Start exit animation shortly after load
+                setTimeout(() => {
+                    if (transition) transition.classList.add('is-exiting');
+                }, 200);
+                // Add is-loaded when hero animations should start (after transition exits)
                 setTimeout(() => {
                     document.body.classList.add('is-loaded');
-                }, 1800);
+                }, 2000);
+                // Remove transition element
                 setTimeout(() => {
                     if (transition) transition.remove();
-                }, 4000);
+                }, 3200);
             } else {
                 document.body.classList.add('is-loaded');
                 const transition = document.getElementById('pageTransition');
@@ -620,4 +625,16 @@
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
+
+        // Expose functions used by inline onclick handlers
+        window.toggleCart = toggleCart;
+        window.switchBrand = switchBrand;
+        window.switchCategory = switchCategory;
+        window.selectProduct = selectProduct;
+        window.scrollRail = scrollRail;
+        window.updateQty = updateQty;
+        window.addToCart = addToCart;
+        window.removeFromCart = removeFromCart;
+        window.orderOnWhatsApp = orderOnWhatsApp;
+        window.switchToMenu = switchToMenu;
         })();
