@@ -126,7 +126,7 @@
             document.body.classList.add('is-loaded', 'transition-done');
 
             document.querySelectorAll(
-                '.hero-eyebrow, .hero-title-line span, .hero-description, .hero-ctas, .reveal, .reveal-scale, .stagger-item, .reveal-mask, .text-reveal, .section-motion'
+                '.hero-eyebrow, .hero-title-line span, .hero-description, .hero-ctas, .reveal, .reveal-scale, .stagger-item, .reveal-mask, .text-reveal, .section-motion, .rail-card'
             ).forEach(el => {
                 el.classList.add('visible');
                 el.style.opacity = '';
