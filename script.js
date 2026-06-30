@@ -101,21 +101,21 @@
 
         const brandInfo = {
             voya: {
-                title: 'VOYA Room',
-                subtitle: 'Specialty coffee for everyday rituals.',
-                desc: 'Crafted cups, warm energy, and the small daily moments that turn into a trip.',
+                title: 'The Coffee Room',
+                subtitle: 'Specialty coffee, everyday rituals.',
+                desc: 'Crafted cups, warm energy, and the small daily moments that turn into something more.',
                 fallbackDesc: 'A Voya favorite from the coffee room.'
             },
             papa: {
-                title: 'Papa Voya Room',
-                subtitle: 'Balanced plates, fresh energy, mindful choices.',
-                desc: 'Healthy food with color, freshness, and enough comfort to keep it joyful.',
+                title: 'The Healthy Room',
+                subtitle: 'Fresh plates, joyful balance.',
+                desc: 'Colorful bowls, mindful ingredients, and just enough comfort to keep it satisfying.',
                 fallbackDesc: 'A balanced choice from Papa Voya.'
             },
             mama: {
-                title: 'Mama Voya Room',
-                subtitle: 'Comfort classics made for sharing.',
-                desc: 'Familiar flavors, generous plates, and the warm side of Voya House.',
+                title: 'The Comfort Room',
+                subtitle: 'Comfort classics, made for sharing.',
+                desc: 'Generous plates, familiar flavors, and the warmth of home in every dish.',
                 fallbackDesc: 'A comfort pick from Mama Voya.'
             }
         };
