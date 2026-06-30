@@ -160,6 +160,7 @@
             const logo = transition?.querySelector('.page-transition-logo');
             const tagline = transition?.querySelector('.page-transition-tagline');
             const line = transition?.querySelector('.page-transition-line');
+            const glow = transition?.querySelector('.page-transition::before');
 
             if (!transition || !logo) {
                 showPageWithoutMotion();
@@ -185,24 +186,30 @@
                 }
             });
 
-            tl.fromTo(logo,
+            tl.to(transition, { opacity: 1, duration: 0.1 })
+            .fromTo(transition.querySelector('.page-transition::before') || transition,
+                { opacity: 0 },
+                { opacity: 1, duration: 0.6 },
+                0.1
+            )
+            .fromTo(logo,
                 { clipPath: 'inset(0 100% 0 0)', opacity: 1 },
-                { clipPath: 'inset(0 0% 0 0)', duration: 0.8 },
-                0
+                { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'expo.inOut' },
+                0.2
             )
             .fromTo(tagline,
-                { opacity: 0, y: 12 },
-                { opacity: 1, y: 0, duration: 0.55 },
-                0.45
+                { opacity: 0, y: 10, letterSpacing: '0.02em' },
+                { opacity: 1, y: 0, letterSpacing: '0.12em', duration: 0.6, ease: 'power2.out' },
+                0.7
             )
             .fromTo(line,
-                { width: 0 },
-                { width: 80, duration: 0.4 },
-                0.65
+                { width: 0, opacity: 0 },
+                { width: 80, opacity: 1, duration: 0.5, ease: 'power2.inOut' },
+                0.95
             )
             .to(transition,
-                { yPercent: -100, duration: 0.8, ease: 'expo.inOut' },
-                1.1
+                { yPercent: -100, duration: 0.85, ease: 'expo.inOut' },
+                1.5
             );
         }
 
