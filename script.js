@@ -1,4 +1,9 @@
         (function() {
+        // ===== GSAP SETUP =====
+        const hasGSAP = typeof window.gsap !== "undefined";
+        const hasScrollTrigger = typeof window.ScrollTrigger !== "undefined";
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
         // ===== MENU DATA =====
         const menuData = {
             voya: {
@@ -115,29 +120,271 @@
             }
         };
 
-        // ===== PAGE LOAD =====
-        function handlePageLoad() {
-            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (!reducedMotion) {
-                const transition = document.getElementById('pageTransition');
-                // Start exit animation shortly after load
-                setTimeout(() => {
-                    if (transition) transition.classList.add('is-exiting');
-                }, 200);
-                // Add is-loaded when hero animations should start (after transition exits)
-                setTimeout(() => {
-                    document.body.classList.add('is-loaded');
-                }, 2000);
-                // Remove transition element
-                setTimeout(() => {
-                    if (transition) transition.remove();
-                }, 3200);
-            } else {
-                document.body.classList.add('is-loaded');
-                const transition = document.getElementById('pageTransition');
-                if (transition) transition.remove();
+        // ===== MOTION SYSTEM =====
+        function showPageWithoutMotion() {
+            document.body.classList.remove('is-loading', 'motion-ready');
+            document.body.classList.add('is-loaded', 'transition-done');
+
+            document.querySelectorAll(
+                '.hero-eyebrow, .hero-title-line span, .hero-description, .hero-ctas, .reveal, .reveal-scale, .stagger-item, .reveal-mask, .text-reveal, .section-motion'
+            ).forEach(el => {
+                el.classList.add('visible');
+                el.style.opacity = '';
+                el.style.transform = '';
+                el.style.visibility = '';
+            });
+
+            const transition = document.getElementById('pageTransition');
+            if (transition) transition.style.display = 'none';
+        }
+
+        function initMotion() {
+            if (!hasGSAP || reduceMotion) {
+                showPageWithoutMotion();
+                initScrollReveals();
+                return;
+            }
+
+            document.body.classList.add('motion-ready', 'is-loading');
+            document.body.classList.remove('is-loaded', 'transition-done');
+
+            if (hasScrollTrigger) {
+                gsap.registerPlugin(ScrollTrigger);
+            }
+
+            initPageIntro();
+        }
+
+        function initPageIntro() {
+            const transition = document.getElementById('pageTransition');
+            const logo = transition?.querySelector('.page-transition-logo');
+            const tagline = transition?.querySelector('.page-transition-tagline');
+            const line = transition?.querySelector('.page-transition-line');
+
+            if (!transition || !logo) {
+                showPageWithoutMotion();
+                return;
+            }
+
+            gsap.set(transition, {
+                display: 'flex',
+                yPercent: 0,
+                opacity: 1
+            });
+
+            const tl = gsap.timeline({
+                defaults: { ease: 'power3.out' },
+                onComplete: () => {
+                    document.body.classList.remove('is-loading');
+                    document.body.classList.add('is-loaded', 'transition-done');
+
+                    gsap.set(transition, { display: 'none' });
+
+                    initHeroMotion();
+                    initScrollReveals();
+                }
+            });
+
+            tl.fromTo(logo,
+                { clipPath: 'inset(0 100% 0 0)', opacity: 1 },
+                { clipPath: 'inset(0 0% 0 0)', duration: 0.8 },
+                0
+            )
+            .fromTo(tagline,
+                { opacity: 0, y: 12 },
+                { opacity: 1, y: 0, duration: 0.55 },
+                0.45
+            )
+            .fromTo(line,
+                { width: 0 },
+                { width: 80, duration: 0.4 },
+                0.65
+            )
+            .to(transition,
+                { yPercent: -100, duration: 0.8, ease: 'expo.inOut' },
+                1.1
+            );
+        }
+
+        function initHeroMotion() {
+            if (!hasGSAP || reduceMotion) return;
+
+            const heroContent = document.querySelector('.hero-content');
+            const eyebrow = document.querySelector('.hero-eyebrow');
+            const titleLines = document.querySelectorAll('.hero-title-line span');
+            const description = document.querySelector('.hero-description');
+            const ctas = document.querySelector('.hero-ctas');
+            const heroBg = document.querySelector('.hero-bg');
+
+            if (!heroContent) return;
+
+            const tl = gsap.timeline({ delay: 0.1 });
+
+            if (heroBg) {
+                gsap.set(heroBg, { scale: 1.04 });
+                tl.to(heroBg, { scale: 1, duration: 1.4, ease: 'power2.out' }, 0);
+            }
+
+            if (eyebrow) {
+                gsap.set(eyebrow, { opacity: 0, y: 20 });
+                tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.3);
+            }
+
+            if (titleLines.length) {
+                titleLines.forEach((line, i) => {
+                    gsap.set(line, { yPercent: 110 });
+                    tl.to(line, { yPercent: 0, duration: 0.85, ease: 'expo.out' }, 0.4 + (i * 0.2));
+                });
+            }
+
+            if (description) {
+                gsap.set(description, { opacity: 0, y: 20 });
+                tl.to(description, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.9);
+            }
+
+            if (ctas) {
+                gsap.set(ctas, { opacity: 0, y: 20 });
+                tl.to(ctas, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 1.1);
             }
         }
+
+        function initScrollReveals() {
+            // Make all reveal elements visible immediately as fallback
+            document.querySelectorAll('.reveal, .reveal-scale, .stagger-item, .section-motion, .text-reveal, .reveal-mask').forEach(el => {
+                el.classList.add('visible');
+                el.style.opacity = '';
+                el.style.transform = '';
+            });
+
+            if (!hasGSAP || reduceMotion || !hasScrollTrigger) {
+                return;
+            }
+
+            gsap.config({ nullTargetWarn: false });
+
+            // Use simple fade animations triggered on scroll
+            const revealElements = document.querySelectorAll('.reveal, .reveal-scale, .mood-card, .location-card, .footer-contact-item');
+            revealElements.forEach(el => {
+                gsap.fromTo(el,
+                    { opacity: 0, y: 25 },
+                    {
+                        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: el,
+                            start: 'top 90%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            });
+
+            // Section motion
+            document.querySelectorAll('.section-motion').forEach(section => {
+                gsap.fromTo(section,
+                    { opacity: 0, y: 20 },
+                    {
+                        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: section,
+                            start: 'top 85%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            });
+        }
+
+        function animateProductCards(enter = true) {
+            if (!hasGSAP || reduceMotion) return;
+
+            const cards = document.querySelectorAll('.rail-card');
+            cards.forEach((card, i) => {
+                if (enter) {
+                    gsap.fromTo(card,
+                        { opacity: 0, x: 20 },
+                        { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out', delay: i * 0.06 }
+                    );
+                }
+            });
+        }
+
+        function animateCartFeedback(element, type) {
+            if (!hasGSAP || reduceMotion) return;
+
+            if (type === 'press' && element) {
+                gsap.timeline()
+                    .to(element, { scale: 0.92, duration: 0.1, ease: 'power2.out' })
+                    .to(element, { scale: 1, duration: 0.25, ease: 'back.out(2)' });
+            }
+
+            if (type === 'countPop') {
+                const count = document.getElementById('cartCount');
+                if (count) {
+                    gsap.timeline()
+                        .to(count, { scale: 1.35, duration: 0.15, ease: 'power2.out' })
+                        .to(count, { scale: 1, duration: 0.3, ease: 'elastic.out(1, 0.5)' });
+                }
+            }
+
+            if (type === 'orderStripIn') {
+                const strip = document.getElementById('orderStrip');
+                if (strip) {
+                    gsap.fromTo(strip,
+                        { yPercent: 100 },
+                        { yPercent: 0, duration: 0.5, ease: 'power3.out' }
+                    );
+                }
+            }
+
+            if (type === 'orderStripOut') {
+                const strip = document.getElementById('orderStrip');
+                if (strip) {
+                    gsap.to(strip, { yPercent: 100, duration: 0.35, ease: 'power3.in' });
+                }
+            }
+
+            if (type === 'toast') {
+                const toast = document.getElementById('toast');
+                if (toast) {
+                    gsap.fromTo(toast,
+                        { yPercent: 20, opacity: 0 },
+                        { yPercent: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }
+                    );
+                }
+            }
+        }
+
+        function animateRailCardExit(card, callback) {
+            if (!hasGSAP || reduceMotion) {
+                callback();
+                return;
+            }
+            gsap.to(card, {
+                opacity: 0,
+                x: -15,
+                duration: 0.25,
+                ease: 'power2.in',
+                onComplete: callback
+            });
+        }
+
+        function cleanupMotion() {
+            if (hasGSAP && hasScrollTrigger) {
+                ScrollTrigger.getAll().forEach(t => t.kill());
+            }
+        }
+
+        // ===== PAGE LOAD =====
+        function handlePageLoad() {
+            initMotion();
+
+            setTimeout(() => {
+                if (!document.body.classList.contains('transition-done')) {
+                    showPageWithoutMotion();
+                }
+            }, 3500);
+        }
+
         if (document.readyState === 'complete' || document.readyState === 'interactive') {
             handlePageLoad();
         } else {
@@ -146,14 +393,9 @@
 
         // ===== INIT =====
         document.addEventListener('DOMContentLoaded', () => {
-            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (!reducedMotion) {
-                document.body.classList.add('motion-ready');
-            }
             setupHeaderScroll();
             setupSmoothScroll();
             setupMobileMenu();
-            setupScrollReveal();
             initMenu();
             updateCartUI();
             initRailDragScroll();
@@ -177,14 +419,13 @@
                 { key: 'mama', name: 'Mama Voya', label: 'Comfort Food' }
             ];
             container.innerHTML = brands.map(b => `
-                <button type="button" class="brand-room brand-room--${b.key} stagger-item ${b.key === currentBrand ? 'active' : ''}"
+                <button type="button" class="brand-room brand-room--${b.key} ${b.key === currentBrand ? 'active' : ''}"
                         onclick="switchBrand('${b.key}')"
                         aria-pressed="${b.key === currentBrand}">
                     <span class="brand-room-name">${b.name}</span>
                     <span class="brand-room-label">${b.label}</span>
                 </button>
             `).join('');
-            refreshRevealItems();
         }
 
         function renderRoomIntro() {
@@ -204,13 +445,12 @@
             const data = menuData[currentBrand];
             if (!data) return;
             container.innerHTML = data.categories.map((cat, idx) => `
-                <button type="button" class="category-chip stagger-item ${idx === currentCategoryIndex ? 'active' : ''}"
+                <button type="button" class="category-chip ${idx === currentCategoryIndex ? 'active' : ''}"
                         onclick="switchCategory(${idx})"
                         aria-pressed="${idx === currentCategoryIndex}">
                     ${cat.name} <span class="category-chip-count">${cat.products.length}</span>
                 </button>
             `).join('');
-            refreshRevealItems();
         }
 
         function renderMenuContent(preserveScroll = false) {
@@ -230,9 +470,8 @@
             const railHtml = products.map((prod, idx) => {
                 const ci = cart.find(i => i.name === prod.name);
                 const qty = ci ? ci.qty : 0;
-                const delay = idx * 60;
                 return `
-                    <div class="rail-card ${idx === currentProductIndex ? 'selected' : ''} is-entering" style="animation-delay: ${delay}ms" onclick="selectProduct(${idx})">
+                    <div class="rail-card ${idx === currentProductIndex ? 'selected' : ''}" onclick="selectProduct(${idx})">
                         <div class="rail-card-name">${prod.name}</div>
                         ${prod.desc ? `<div class="rail-card-desc">${prod.desc}</div>` : ''}
                         <div class="rail-card-cat">${category.name}</div>
@@ -270,7 +509,7 @@
                 if (newRail) newRail.scrollLeft = savedScroll;
             }
 
-            refreshRevealItems();
+            setTimeout(() => animateProductCards(true), 50);
         }
 
         function switchBrand(brand) {
@@ -367,57 +606,9 @@
             });
         }
 
-        // Alias for backward compatibility with mood card buttons
         function switchToMenu(brand) {
             switchBrand(brand);
             document.getElementById('menu').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        let revealObserver = null;
-        let motionEnabled = true;
-
-        function setupScrollReveal() {
-            motionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            if (!motionEnabled) {
-                document.querySelectorAll('.reveal, .reveal-scale, .stagger-item, .reveal-mask, .text-reveal, .section-motion').forEach(el => {
-                    el.classList.add('visible');
-                });
-                return;
-            }
-            if (revealObserver) {
-                revealObserver.disconnect();
-            }
-            revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) return;
-                    const el = entry.target;
-                    if (el.classList.contains('stagger-item')) {
-                        const parent = el.parentElement;
-                        const siblings = parent ? Array.from(parent.querySelectorAll('.stagger-item')) : [];
-                        const idx = siblings.indexOf(el);
-                        el.style.transitionDelay = `${Math.min(idx * 80, 450)}ms`;
-                    }
-                    el.classList.add('visible');
-                    revealObserver.unobserve(el);
-                });
-            }, {
-                threshold: 0.12,
-                rootMargin: '0px 0px -8% 0px'
-            });
-            refreshRevealItems();
-        }
-
-        function refreshRevealItems(scope) {
-            if (!motionEnabled) return;
-            const target = scope || document;
-            const items = target.querySelectorAll('.reveal:not(.visible), .reveal-scale:not(.visible), .stagger-item:not(.visible), .reveal-mask:not(.visible), .text-reveal:not(.visible), .section-motion:not(.visible)');
-            items.forEach(item => {
-                if (item.dataset.revealReady === 'true') return;
-                item.dataset.revealReady = 'true';
-                if (revealObserver) {
-                    revealObserver.observe(item);
-                }
-            });
         }
 
         function setupHeaderScroll() {
@@ -482,6 +673,7 @@
             updateCartUI();
             updateRailCards();
             showToast(`${name} added to cart`);
+            animateCartFeedback(null, 'countPop');
         }
 
         function updateQty(name, change) {
@@ -540,11 +732,17 @@
             const orderStrip = document.getElementById('orderStrip');
             const drawerOpen = document.getElementById('cartDrawer').classList.contains('open');
             if (count > 0 && !drawerOpen) {
+                if (!orderStrip.classList.contains('show')) {
+                    animateCartFeedback(null, 'orderStripIn');
+                }
                 orderStrip.classList.add('show');
                 document.body.classList.add('order-strip-visible');
                 document.getElementById('orderStripCount').textContent = count + ' item' + (count !== 1 ? 's' : '');
                 document.getElementById('orderStripTotal').innerHTML = total + ' <span>EGP</span>';
             } else {
+                if (orderStrip.classList.contains('show')) {
+                    animateCartFeedback(null, 'orderStripOut');
+                }
                 orderStrip.classList.remove('show');
                 document.body.classList.remove('order-strip-visible');
             }
@@ -605,7 +803,7 @@
             const orderStrip = document.getElementById('orderStrip');
             if (count > 0 && !drawerOpen) {
                 orderStrip.classList.add('show');
-            } else {
+            } else if (count === 0) {
                 orderStrip.classList.remove('show');
             }
         }
@@ -621,9 +819,27 @@
 
         function showToast(msg) {
             const toast = document.getElementById('toast');
+            if (!toast) return;
+
             toast.textContent = msg;
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
+
+            if (hasGSAP && !reduceMotion) {
+                animateCartFeedback(null, 'toast');
+            }
+
+            clearTimeout(showToast._timer);
+            showToast._timer = setTimeout(() => {
+                toast.classList.remove('show');
+                if (hasGSAP && !reduceMotion) {
+                    gsap.to(toast, {
+                        opacity: 0,
+                        y: 10,
+                        duration: 0.3,
+                        ease: 'power2.in'
+                    });
+                }
+            }, 2500);
         }
 
         // Expose functions used by inline onclick handlers
@@ -632,6 +848,7 @@
         window.switchCategory = switchCategory;
         window.selectProduct = selectProduct;
         window.scrollRail = scrollRail;
+        window.scrollCategories = scrollCategories;
         window.updateQty = updateQty;
         window.addToCart = addToCart;
         window.removeFromCart = removeFromCart;

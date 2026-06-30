@@ -19,7 +19,14 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; width: 100%; max-width: 100%; overflow-x: hidden; }
+        html {
+            scroll-behavior: smooth;
+            width: 100%;
+            max-width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
         body {
             font-family: var(--font-body);
             background-color: var(--soft-ivory);
@@ -27,34 +34,39 @@
             line-height: 1.6;
             width: 100%;
             max-width: 100%;
-            overflow-x: hidden;
+            min-height: 100%;
+            overflow: visible;
+            display: block;
         }
         body > * {
             max-width: 100%;
         }
 
         /* ===== PAGE TRANSITION ===== */
-        /* Cinematic branded intro - feels like a curtain reveal */
         .page-transition {
             position: fixed;
             inset: 0;
+            width: 100%;
+            height: 100%;
             z-index: 9999;
             background: var(--deep-black);
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            pointer-events: all;
+            pointer-events: none;
             overflow: hidden;
         }
-        /* Subtle gradient overlay for depth */
+        body.motion-ready.is-loading .page-transition {
+            display: flex;
+            pointer-events: all;
+        }
         .page-transition::before {
             content: '';
             position: absolute;
             inset: 0;
             background: radial-gradient(ellipse at center, rgba(192, 84, 42, 0.08) 0%, transparent 70%);
             opacity: 0;
-            animation: ptBgFade 1s ease 0.3s forwards;
         }
         .page-transition-inner {
             display: flex;
@@ -64,64 +76,31 @@
             position: relative;
             z-index: 1;
         }
-        /* Logo with clip-path mask reveal */
         .page-transition-logo {
             font-family: var(--font-display);
             font-size: clamp(2.5rem, 8vw, 5rem);
             font-weight: 700;
             letter-spacing: 0.3em;
             color: var(--soft-ivory);
-            clip-path: inset(0 100% 0 0);
-            animation: ptLogoReveal 0.9s var(--motion-soft) 0.2s forwards;
         }
-        /* Tagline fades in after logo */
         .page-transition-tagline {
             font-family: var(--font-display);
             font-size: clamp(0.9rem, 2.5vw, 1.2rem);
             font-style: italic;
             color: var(--terracotta);
             letter-spacing: 0.08em;
-            opacity: 0;
-            transform: translateY(15px);
-            animation: ptTaglineIn 0.7s var(--motion-soft) 0.85s forwards;
         }
-        /* Terracotta line expands from center */
         .page-transition-line {
             width: 0;
             height: 1px;
             background: var(--terracotta);
             margin-top: 0.75rem;
             transform-origin: center;
-            animation: ptLineExpand 0.5s var(--motion-ease) 1.1s forwards;
-        }
-        @keyframes ptBgFade {
-            to { opacity: 1; }
-        }
-        @keyframes ptLogoReveal {
-            0% { clip-path: inset(0 100% 0 0); opacity: 1; }
-            100% { clip-path: inset(0 0 0 0); opacity: 1; }
-        }
-        @keyframes ptTaglineIn {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes ptLineExpand {
-            to { width: 80px; }
-        }
-        /* Curtain-style exit: panel slides UP to reveal hero underneath */
-        .page-transition.is-exiting {
-            animation: ptCurtainUp 0.9s var(--motion-soft) 1.5s forwards;
-        }
-        @keyframes ptCurtainUp {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100%); }
         }
         body.is-loaded .page-transition {
+            display: none;
             pointer-events: none;
         }
-        body.is-loaded .page-transition.is-exiting {
-            animation: ptCurtainUp 0.8s var(--motion-soft) 0s forwards;
-        }
-        /* Transition element removed at 3.5s via JS */
 
         /* Reduced motion: skip transition quickly */
         @media (prefers-reduced-motion: reduce) {
@@ -387,44 +366,21 @@
             transform: translateY(0);
         }
 
-        /* Motion mode: hero content hidden during transition, animates AFTER transition exits */
-        body.motion-ready .hero-eyebrow {
+        /* Motion mode: hero content hidden ONLY during loading, revealed after transition */
+        body.motion-ready.is-loading .hero-eyebrow {
             opacity: 0;
             transform: translateY(20px);
         }
-        body.motion-ready .hero-title-line span {
+        body.motion-ready.is-loading .hero-title-line span {
             transform: translateY(110%);
         }
-        body.motion-ready .hero-description {
+        body.motion-ready.is-loading .hero-description {
             opacity: 0;
             transform: translateY(20px);
         }
-        body.motion-ready .hero-ctas {
+        body.motion-ready.is-loading .hero-ctas {
             opacity: 0;
             transform: translateY(20px);
-        }
-
-        /* Hero animations START after transition exits (body.is-loaded + transition-done) */
-        body.motion-ready.is-loaded .hero-eyebrow {
-            animation: heroEyebrowIn 0.7s var(--motion-soft) 0.1s forwards;
-        }
-        body.motion-ready.is-loaded .hero-title-line:first-child span {
-            animation: heroTitleMask 0.85s var(--motion-soft) 0.25s forwards;
-        }
-        body.motion-ready.is-loaded .hero-title-line:last-child span {
-            animation: heroTitleMask 0.85s var(--motion-soft) 0.5s forwards;
-        }
-        body.motion-ready.is-loaded .hero-description {
-            animation: heroContentFade 0.7s var(--motion-soft) 0.85s forwards;
-        }
-        body.motion-ready.is-loaded .hero-ctas {
-            animation: heroContentFade 0.7s var(--motion-soft) 1.05s forwards;
-        }
-
-        /* Subtle background movement after transition */
-        body.motion-ready.is-loaded .hero-bg {
-            transform: scale(1.03);
-            animation: heroBgPulse 12s ease-in-out 2s forwards;
         }
 
         .hero-circle {
@@ -1088,6 +1044,7 @@
             box-shadow: 0 -4px 30px rgba(8, 9, 7, 0.2);
             transform: translateY(100%);
             opacity: 0;
+            overflow: hidden;
             transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .order-strip.show {
@@ -1316,6 +1273,7 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.4s ease;
+            overflow: hidden;
         }
         .cart-overlay.open { opacity: 1; visibility: visible; }
         .cart-drawer {
@@ -1331,6 +1289,7 @@
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
         .cart-drawer.open { transform: translateX(0); }
         .cart-header {
@@ -1492,17 +1451,21 @@
             opacity: 0;
             transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
             pointer-events: none;
+            overflow: hidden;
         }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
         /* ===== REVEAL ===== */
-        /* Content is visible by default. Motion mode (body.motion-ready) enables hiding. */
+        /* Content is visible by default. Motion mode (body.motion-ready.is-loading) enables hiding during intro. */
         .reveal,
         .reveal-scale,
         .stagger-item,
-        .section-motion {
+        .section-motion,
+        .text-reveal,
+        .reveal-mask {
             opacity: 1;
             transform: translateY(0);
+            visibility: visible;
         }
         .reveal-mask {
             clip-path: inset(0 0 0 0);
@@ -1667,13 +1630,13 @@
                 color: var(--terracotta);
             }
             .hero {
-                min-height: 100svh;
-                padding: 6.5rem 1rem 3rem;
+                min-height: 100dvh;
+                padding: 5rem 1rem 2rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 text-align: center;
-                overflow-x: hidden;
+                overflow: hidden;
             }
             .hero-content {
                 width: 100%;
