@@ -308,10 +308,10 @@
                 });
 
                 tl.to(heroContent, {
-                    y: -90,
-                    opacity: 0.2,
-                    scale: 0.96,
-                    rotateX: 3,
+                    y: -65,
+                    opacity: 0.15,
+                    scale: 0.97,
+                    rotateX: 2.5,
                     transformOrigin: '50% 100%',
                     duration: 1,
                     ease: 'none'
@@ -349,8 +349,8 @@
 
                 if (marquee) {
                     tl.fromTo(marquee,
-                        { y: 60, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 1, ease: 'none' },
+                        { opacity: 0 },
+                        { opacity: 1, duration: 1, ease: 'none' },
                         0.35
                     );
                 }
@@ -384,8 +384,8 @@
 
                 if (marquee) {
                     tl.fromTo(marquee,
-                        { y: 40, opacity: 0 },
-                        { y: 0, opacity: 1, duration: 1, ease: 'none' },
+                        { opacity: 0 },
+                        { opacity: 1, duration: 1, ease: 'none' },
                         0.4
                     );
                 }
@@ -425,32 +425,48 @@
             const storySection = document.querySelector('.story-section');
             if (storySection) {
                 const storyHeading = storySection.querySelector('.story-heading');
-                const storyText = storySection.querySelector('.story-text');
+                const storyText = document.querySelector('.story-text-left');
+                const storyTextRight = document.querySelector('.story-text-right');
 
-                // Heading tilts down from top (3D effect)
+                // Heading enters with clip wipe from top + slight 3D
                 if (storyHeading) {
                     gsap.fromTo(storyHeading,
-                        { opacity: 0, y: 25, rotateX: -8, transformOrigin: '50% 100%' },
+                        { clipPath: 'inset(0 0 100% 0)', opacity: 0.6 },
                         {
-                            opacity: 1, y: 0, rotateX: 0, duration: 1, ease: 'power3.out',
+                            clipPath: 'inset(0 0 0% 0)', opacity: 1, duration: 1.1, ease: 'power3.out',
                             scrollTrigger: {
                                 trigger: storySection,
-                                start: 'top 78%',
+                                start: 'top 75%',
                                 toggleActions: 'play none none none'
                             }
                         }
                     );
                 }
 
-                // Text slides in from right
+                // Left text column slides from left
                 if (storyText) {
                     gsap.fromTo(storyText,
-                        { opacity: 0, x: 45 },
+                        { opacity: 0, x: -30 },
                         {
-                            opacity: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.15,
+                            opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', delay: 0.12,
                             scrollTrigger: {
                                 trigger: storySection,
-                                start: 'top 78%',
+                                start: 'top 75%',
+                                toggleActions: 'play none none none'
+                            }
+                        }
+                    );
+                }
+
+                // Right text column slides from right
+                if (storyTextRight) {
+                    gsap.fromTo(storyTextRight,
+                        { opacity: 0, x: 30 },
+                        {
+                            opacity: 1, x: 0, duration: 0.85, ease: 'power3.out', delay: 0.22,
+                            scrollTrigger: {
+                                trigger: storySection,
+                                start: 'top 75%',
                                 toggleActions: 'play none none none'
                             }
                         }
@@ -460,9 +476,9 @@
                 // Background circle drifts in with subtle scale
                 if (storySection) {
                     gsap.fromTo(storySection,
-                        { opacity: 0.8 },
+                        { opacity: 0.85 },
                         {
-                            opacity: 1, duration: 1.2, ease: 'power2.out',
+                            opacity: 1, duration: 1.4, ease: 'power2.out',
                             scrollTrigger: {
                                 trigger: storySection,
                                 start: 'top 80%',
@@ -501,16 +517,16 @@
                 }
             }
 
-            // Mood cards - dramatic staggered lift with rotation
+            // Mood cards - elegant staggered lift with subtle rotation
             const moodCards = document.querySelectorAll('.mood-card');
             if (moodCards.length) {
-                const rotations = [-1.2, 0, 1.2];
+                const rotations = [-0.6, 0, 0.6];
                 moodCards.forEach((card, i) => {
                     gsap.fromTo(card,
-                        { opacity: 0, y: 65, scale: 0.91, rotate: rotations[i] || 0 },
+                        { opacity: 0, y: 50, scale: 0.95, rotate: rotations[i] || 0 },
                         {
-                            opacity: 1, y: 0, scale: 1, rotate: 0, duration: 0.8, ease: 'power3.out',
-                            delay: i * 0.13,
+                            opacity: 1, y: 0, scale: 1, rotate: 0, duration: 0.75, ease: 'power3.out',
+                            delay: i * 0.14,
                             scrollTrigger: {
                                 trigger: moodCards[0],
                                 start: 'top 82%',
@@ -556,13 +572,13 @@
                 }
             }
 
-            // Brand switch - visible entrance with subtle scale
+            // Brand switch - clip-path wipe reveal
             const brandSwitch = document.querySelector('.brand-switch');
             if (brandSwitch) {
                 gsap.fromTo(brandSwitch,
-                    { opacity: 0, y: 25, scale: 0.97 },
+                    { clipPath: 'inset(0 0 100% 0)', opacity: 0.5 },
                     {
-                        opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'power3.out',
+                        clipPath: 'inset(0 0 0% 0)', opacity: 1, duration: 0.85, ease: 'power3.out',
                         scrollTrigger: {
                             trigger: menuSection || brandSwitch,
                             start: 'top 80%',
@@ -572,13 +588,13 @@
                 );
             }
 
-            // Room intro - slide-in with subtle rotate
+            // Room intro - clip-path wipe reveal
             const roomIntro = document.querySelector('.room-intro');
             if (roomIntro) {
                 gsap.fromTo(roomIntro,
-                    { opacity: 0, y: 40, rotateX: -4, transformOrigin: '50% 100%' },
+                    { clipPath: 'inset(0 0 100% 0)', opacity: 0.6 },
                     {
-                        opacity: 1, y: 0, rotateX: 0, duration: 0.85, ease: 'power3.out',
+                        clipPath: 'inset(0 0 0% 0)', opacity: 1, duration: 0.9, ease: 'power3.out',
                         scrollTrigger: {
                             trigger: roomIntro,
                             start: 'top 85%',
@@ -642,15 +658,14 @@
                 }
             }
 
-            // Location cards - dramatic staggered reveal with alternating rotation
+            // Location cards - calm staggered reveal
             const locationCards = document.querySelectorAll('.location-card');
             if (locationCards.length) {
-                const locRotations = [1, -0.8, 1, -0.8];
                 locationCards.forEach((card, i) => {
                     gsap.fromTo(card,
-                        { opacity: 0, y: 55, scale: 0.93, rotate: locRotations[i] || 0 },
+                        { opacity: 0, y: 40, scale: 0.96 },
                         {
-                            opacity: 1, y: 0, scale: 1, rotate: 0, duration: 0.8, ease: 'power3.out',
+                            opacity: 1, y: 0, scale: 1, duration: 0.75, ease: 'power3.out',
                             delay: i * 0.12,
                             scrollTrigger: {
                                 trigger: locationCards[0],

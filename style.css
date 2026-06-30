@@ -615,9 +615,15 @@
         }
         .story-heading span { color: var(--terracotta); }
         .story-text {
+            display: flex;
+            gap: 2rem;
             font-size: 1.05rem;
             line-height: 2;
             opacity: 0.85;
+        }
+        .story-text-left,
+        .story-text-right {
+            flex: 1;
         }
         .story-text p { margin-bottom: 1.5rem; }
         .story-text p:last-child { margin-bottom: 0; }
@@ -1856,6 +1862,9 @@
             .moods-section { padding: 4rem 1.5rem; }
             .story-container { padding: 0; gap: 2rem; }
             .story-heading { font-size: clamp(2rem, 8vw, 3rem); }
+            .story-text { flex-direction: column; gap: 0; }
+            .story-text-left,
+            .story-text-right { flex: none; width: 100%; }
             .menu-section { padding: 4rem 0 7rem; overflow-x: hidden; }
             .menu-header { padding: 0 1.5rem 2rem; }
             .brand-switch { padding: 0 1rem 1.5rem; gap: 0.5rem; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
