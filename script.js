@@ -183,6 +183,7 @@
 
                     initHeroMotion();
                     initScrollReveals();
+                    initHeroScrollParallax();
                 }
             });
 
@@ -278,6 +279,71 @@
             }
         }
 
+        function initHeroScrollParallax() {
+            if (!hasGSAP || reduceMotion || !hasScrollTrigger) return;
+
+            const hero = document.querySelector('.hero');
+            const heroContent = document.querySelector('.hero-content');
+            const heroCircle1 = document.querySelector('.hero-circle--1');
+            const heroCircle2 = document.querySelector('.hero-circle--2');
+
+            if (!hero || !heroContent) return;
+
+            const mm = gsap.matchMedia();
+
+            mm.add('(min-width: 769px)', () => {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: hero,
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 1.5
+                    }
+                });
+
+                tl.to(heroContent, {
+                    y: -40,
+                    opacity: 0.6,
+                    duration: 1,
+                    ease: 'none'
+                }, 0);
+
+                if (heroCircle1) {
+                    tl.to(heroCircle1, {
+                        y: 60,
+                        duration: 1,
+                        ease: 'none'
+                    }, 0);
+                }
+
+                if (heroCircle2) {
+                    tl.to(heroCircle2, {
+                        y: 40,
+                        duration: 1,
+                        ease: 'none'
+                    }, 0);
+                }
+            });
+
+            mm.add('(max-width: 768px)', () => {
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: hero,
+                        start: 'top top',
+                        end: 'bottom top',
+                        scrub: 2
+                    }
+                });
+
+                tl.to(heroContent, {
+                    y: -20,
+                    opacity: 0.7,
+                    duration: 1,
+                    ease: 'none'
+                }, 0);
+            });
+        }
+
         function initScrollReveals() {
             // Make all reveal elements visible immediately as fallback
             document.querySelectorAll('.reveal, .reveal-scale, .stagger-item, .section-motion, .text-reveal, .reveal-mask').forEach(el => {
@@ -292,20 +358,41 @@
 
             gsap.config({ nullTargetWarn: false });
 
-            // Story headings - soft fade-up
-            document.querySelectorAll('.story-section .reveal').forEach(el => {
-                gsap.fromTo(el,
-                    { opacity: 0, y: 18 },
+            // Marquee section - subtle fade
+            const marquee = document.querySelector('.marquee');
+            if (marquee) {
+                gsap.fromTo(marquee,
+                    { opacity: 0 },
                     {
-                        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+                        opacity: 1, duration: 0.5, ease: 'power2.out',
                         scrollTrigger: {
-                            trigger: el,
-                            start: 'top 88%',
+                            trigger: marquee,
+                            start: 'top 95%',
                             toggleActions: 'play none none none'
                         }
                     }
                 );
-            });
+            }
+
+            // Story section - sequential reveal
+            const storySection = document.querySelector('.story-section');
+            if (storySection) {
+                const storyElements = storySection.querySelectorAll('.reveal');
+                storyElements.forEach((el, i) => {
+                    gsap.fromTo(el,
+                        { opacity: 0, y: 16 },
+                        {
+                            opacity: 1, y: 0, duration: 0.55, ease: 'power3.out',
+                            delay: i * 0.12,
+                            scrollTrigger: {
+                                trigger: el,
+                                start: 'top 88%',
+                                toggleActions: 'play none none none'
+                            }
+                        }
+                    );
+                });
+            }
 
             // Mood cards - staggered fade-up
             const moodCards = document.querySelectorAll('.mood-card');
@@ -324,22 +411,26 @@
                 );
             }
 
-            // Menu header reveals - subtle fade-up
-            document.querySelectorAll('.menu-header .reveal').forEach(el => {
-                gsap.fromTo(el,
-                    { opacity: 0, y: 14 },
-                    {
-                        opacity: 1, y: 0, duration: 0.55, ease: 'power3.out',
-                        scrollTrigger: {
-                            trigger: el,
-                            start: 'top 88%',
-                            toggleActions: 'play none none none'
+            // Menu header reveals - subtle fade-up with stagger
+            const menuHeader = document.querySelector('.menu-header');
+            if (menuHeader) {
+                const menuElements = menuHeader.querySelectorAll('.reveal');
+                menuElements.forEach((el, i) => {
+                    gsap.fromTo(el,
+                        { opacity: 0, y: 14 },
+                        {
+                            opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
+                            scrollTrigger: {
+                                trigger: el,
+                                start: 'top 88%',
+                                toggleActions: 'play none none none'
+                            }
                         }
-                    }
-                );
-            });
+                    );
+                });
+            }
 
-            // Brand switch - soft fade
+            // Brand switch - soft fade, triggered after menu header
             const brandSwitch = document.querySelector('.brand-switch');
             if (brandSwitch) {
                 gsap.fromTo(brandSwitch,
@@ -347,24 +438,24 @@
                     {
                         opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
                         scrollTrigger: {
-                            trigger: brandSwitch,
-                            start: 'top 90%',
+                            trigger: menuHeader || brandSwitch,
+                            start: 'top 85%',
                             toggleActions: 'play none none none'
                         }
                     }
                 );
             }
 
-            // Category bar - very subtle fade
+            // Category bar - very subtle fade, triggered after brand switch
             const categoryBar = document.querySelector('.category-bar');
             if (categoryBar) {
                 gsap.fromTo(categoryBar,
                     { opacity: 0 },
                     {
-                        opacity: 1, duration: 0.45, ease: 'power2.out',
+                        opacity: 1, duration: 0.4, ease: 'power2.out',
                         scrollTrigger: {
                             trigger: categoryBar,
-                            start: 'top 90%',
+                            start: 'top 88%',
                             toggleActions: 'play none none none'
                         }
                     }

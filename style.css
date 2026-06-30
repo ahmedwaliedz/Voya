@@ -888,7 +888,9 @@
             display: flex;
             align-items: center;
         }
-        .category-chip:hover { border-color: var(--deep-black); }
+        @media (hover: hover) and (pointer: fine) {
+            .category-chip:hover { border-color: var(--deep-black); transform: translateY(-2px); box-shadow: 0 3px 8px rgba(8,9,7,0.08); }
+        }
         .category-chip.active {
             background: var(--terracotta);
             color: white;
@@ -1055,7 +1057,9 @@
             justify-content: center;
             box-shadow: 0 2px 8px rgba(8, 9, 7, 0.15);
         }
-        .rail-card-add:hover { background: var(--terracotta); transform: scale(1.08); box-shadow: 0 4px 12px rgba(192, 84, 42, 0.25); }
+        @media (hover: hover) and (pointer: fine) {
+            .rail-card-add:hover { background: var(--terracotta); transform: scale(1.04); box-shadow: 0 4px 12px rgba(192, 84, 42, 0.25); }
+        }
         .rail-card-add:active { transform: scale(0.94); box-shadow: none; }
         .rail-card-qty {
             display: flex;
@@ -1213,10 +1217,12 @@
             padding: 3rem;
             transition: all 0.4s ease;
         }
-        .location-card:hover {
-            background: rgba(255,255,255,0.07);
-            transform: translateY(-5px);
-            border-color: rgba(192, 84, 42, 0.3);
+        @media (hover: hover) and (pointer: fine) {
+            .location-card:hover {
+                background: rgba(255,255,255,0.07);
+                transform: translateY(-4px);
+                border-color: rgba(192, 84, 42, 0.3);
+            }
         }
         .location-icon {
             width: 54px;
@@ -1873,4 +1879,46 @@
         }
         .skip-link:focus {
             top: 0;
+        }
+
+        /* ===== MOBILE TOUCH / PRESS FEEDBACK ===== */
+        /* Applied when device uses touch (no hover) or coarse pointer */
+        @media (hover: none), (pointer: coarse) {
+            .brand-room,
+            .mood-card,
+            .category-chip,
+            .rail-card,
+            .location-card,
+            .btn-primary,
+            .btn-secondary,
+            .whatsapp-btn,
+            .category-nav-btn,
+            .cart-btn,
+            .rail-card-add,
+            .order-strip-btn,
+            .cart-close,
+            .mood-card-btn {
+                -webkit-tap-highlight-color: transparent;
+                transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+            }
+
+            .brand-room:active,
+            .mood-card:active,
+            .rail-card:active,
+            .location-card:active {
+                transform: scale(0.985);
+            }
+
+            .category-chip:active,
+            .btn-primary:active,
+            .btn-secondary:active,
+            .whatsapp-btn:active,
+            .category-nav-btn:active,
+            .cart-btn:active,
+            .rail-card-add:active,
+            .order-strip-btn:active,
+            .cart-close:active,
+            .mood-card-btn:active {
+                transform: scale(0.96);
+            }
         }
