@@ -126,7 +126,7 @@
             document.body.classList.add('is-loaded', 'transition-done');
 
             document.querySelectorAll(
-                '.hero-eyebrow, .hero-title-line span, .hero-description, .hero-ctas, .reveal, .reveal-scale, .stagger-item, .reveal-mask, .text-reveal, .section-motion'
+                '.hero-eyebrow, .hero-title-line span, .hero-description, .hero-ctas, .reveal, .reveal-scale, .stagger-item, .reveal-mask, .text-reveal, .section-motion, .rail-card'
             ).forEach(el => {
                 el.classList.add('visible');
                 el.style.opacity = '';
@@ -160,7 +160,7 @@
             const logo = transition?.querySelector('.page-transition-logo');
             const tagline = transition?.querySelector('.page-transition-tagline');
             const line = transition?.querySelector('.page-transition-line');
-            const glow = transition?.querySelector('.page-transition::before');
+            const brandWords = transition?.querySelectorAll('.brand-word');
 
             if (!transition || !logo) {
                 showPageWithoutMotion();
@@ -174,84 +174,107 @@
             });
 
             const tl = gsap.timeline({
-                defaults: { ease: 'power3.out' },
+                defaults: { ease: 'power2.out' },
                 onComplete: () => {
                     document.body.classList.remove('is-loading');
                     document.body.classList.add('is-loaded', 'transition-done');
 
-                    gsap.set(transition, { display: 'none' });
+                    gsap.set(transition, { display: 'none', pointerEvents: 'none' });
 
                     initHeroMotion();
                     initScrollReveals();
                 }
             });
 
-            tl.to(transition, { opacity: 1, duration: 0.1 })
-            .fromTo(transition.querySelector('.page-transition::before') || transition,
+            tl.fromTo('.page-transition::before',
                 { opacity: 0 },
-                { opacity: 1, duration: 0.6 },
-                0.1
+                { opacity: 1, duration: 0.5 },
+                0
             )
             .fromTo(logo,
-                { clipPath: 'inset(0 100% 0 0)', opacity: 1 },
-                { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'expo.inOut' },
+                { clipPath: 'inset(0 100% 0 0)' },
+                { clipPath: 'inset(0 0% 0 0)', duration: 0.75, ease: 'expo.inOut' },
                 0.2
             )
             .fromTo(tagline,
-                { opacity: 0, y: 10, letterSpacing: '0.02em' },
-                { opacity: 1, y: 0, letterSpacing: '0.12em', duration: 0.6, ease: 'power2.out' },
-                0.7
+                { opacity: 0, y: 6 },
+                { opacity: 1, y: 0, duration: 0.5, ease: 'power1.out' },
+                0.6
+            )
+            .fromTo(brandWords[0],
+                { opacity: 0, y: 6 },
+                { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
+                0.95
+            )
+            .to(brandWords[0],
+                { opacity: 0, y: -6, duration: 0.25, ease: 'power2.in' },
+                1.25
+            )
+            .fromTo(brandWords[1],
+                { opacity: 0, y: 6 },
+                { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
+                1.35
+            )
+            .to(brandWords[1],
+                { opacity: 0, y: -6, duration: 0.25, ease: 'power2.in' },
+                1.65
+            )
+            .fromTo(brandWords[2],
+                { opacity: 0, y: 6 },
+                { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' },
+                1.75
+            )
+            .to(brandWords[2],
+                { opacity: 0, y: -6, duration: 0.25, ease: 'power2.in' },
+                2.1
             )
             .fromTo(line,
                 { width: 0, opacity: 0 },
                 { width: 80, opacity: 1, duration: 0.5, ease: 'power2.inOut' },
-                0.95
+                2.2
             )
             .to(transition,
-                { yPercent: -100, duration: 0.85, ease: 'expo.inOut' },
-                1.5
+                { yPercent: -100, duration: 0.75, ease: 'expo.inOut' },
+                2.65
             );
         }
 
         function initHeroMotion() {
             if (!hasGSAP || reduceMotion) return;
 
-            const heroContent = document.querySelector('.hero-content');
             const eyebrow = document.querySelector('.hero-eyebrow');
             const titleLines = document.querySelectorAll('.hero-title-line span');
             const description = document.querySelector('.hero-description');
             const ctas = document.querySelector('.hero-ctas');
             const heroBg = document.querySelector('.hero-bg');
 
-            if (!heroContent) return;
-
-            const tl = gsap.timeline({ delay: 0.1 });
+            const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
             if (heroBg) {
                 gsap.set(heroBg, { scale: 1.04 });
-                tl.to(heroBg, { scale: 1, duration: 1.4, ease: 'power2.out' }, 0);
+                tl.to(heroBg, { scale: 1, duration: 1.4, ease: 'power1.out' }, 0);
             }
 
             if (eyebrow) {
-                gsap.set(eyebrow, { opacity: 0, y: 20 });
-                tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.3);
+                gsap.set(eyebrow, { opacity: 0, y: 12 });
+                tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.5 }, 0.15);
             }
 
             if (titleLines.length) {
                 titleLines.forEach((line, i) => {
-                    gsap.set(line, { yPercent: 110 });
-                    tl.to(line, { yPercent: 0, duration: 0.85, ease: 'expo.out' }, 0.4 + (i * 0.2));
+                    gsap.set(line, { yPercent: 108 });
+                    tl.to(line, { yPercent: 0, duration: 0.65, ease: 'expo.out' }, 0.25 + (i * 0.12));
                 });
             }
 
             if (description) {
-                gsap.set(description, { opacity: 0, y: 20 });
-                tl.to(description, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0.9);
+                gsap.set(description, { opacity: 0, y: 12 });
+                tl.to(description, { opacity: 1, y: 0, duration: 0.5 }, 0.6);
             }
 
             if (ctas) {
-                gsap.set(ctas, { opacity: 0, y: 20 });
-                tl.to(ctas, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 1.1);
+                gsap.set(ctas, { opacity: 0, y: 12 });
+                tl.to(ctas, { opacity: 1, y: 0, duration: 0.45 }, 0.8);
             }
         }
 
@@ -269,31 +292,128 @@
 
             gsap.config({ nullTargetWarn: false });
 
-            // Use simple fade animations triggered on scroll
-            const revealElements = document.querySelectorAll('.reveal, .reveal-scale, .mood-card, .location-card, .footer-contact-item');
-            revealElements.forEach(el => {
+            // Story headings - soft fade-up
+            document.querySelectorAll('.story-section .reveal').forEach(el => {
                 gsap.fromTo(el,
-                    { opacity: 0, y: 25 },
+                    { opacity: 0, y: 18 },
                     {
-                        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+                        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
                         scrollTrigger: {
                             trigger: el,
-                            start: 'top 90%',
+                            start: 'top 88%',
                             toggleActions: 'play none none none'
                         }
                     }
                 );
             });
 
-            // Section motion
-            document.querySelectorAll('.section-motion').forEach(section => {
-                gsap.fromTo(section,
+            // Mood cards - staggered fade-up
+            const moodCards = document.querySelectorAll('.mood-card');
+            if (moodCards.length) {
+                gsap.fromTo(moodCards,
                     { opacity: 0, y: 20 },
                     {
-                        opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+                        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+                        stagger: 0.12,
+                        scrollTrigger: {
+                            trigger: moodCards[0],
+                            start: 'top 85%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            }
+
+            // Menu header reveals - subtle fade-up
+            document.querySelectorAll('.menu-header .reveal').forEach(el => {
+                gsap.fromTo(el,
+                    { opacity: 0, y: 14 },
+                    {
+                        opacity: 1, y: 0, duration: 0.55, ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: el,
+                            start: 'top 88%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            });
+
+            // Brand switch - soft fade
+            const brandSwitch = document.querySelector('.brand-switch');
+            if (brandSwitch) {
+                gsap.fromTo(brandSwitch,
+                    { opacity: 0, y: 12 },
+                    {
+                        opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: brandSwitch,
+                            start: 'top 90%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            }
+
+            // Category bar - very subtle fade
+            const categoryBar = document.querySelector('.category-bar');
+            if (categoryBar) {
+                gsap.fromTo(categoryBar,
+                    { opacity: 0 },
+                    {
+                        opacity: 1, duration: 0.45, ease: 'power2.out',
+                        scrollTrigger: {
+                            trigger: categoryBar,
+                            start: 'top 90%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            }
+
+            // Location cards - calm staggered fade-up
+            const locationCards = document.querySelectorAll('.location-card');
+            if (locationCards.length) {
+                gsap.fromTo(locationCards,
+                    { opacity: 0, y: 18 },
+                    {
+                        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
+                        stagger: 0.1,
+                        scrollTrigger: {
+                            trigger: locationCards[0],
+                            start: 'top 88%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            }
+
+            // Footer items - gentle staggered fade-up
+            const footerItems = document.querySelectorAll('.footer-contact-item');
+            if (footerItems.length) {
+                gsap.fromTo(footerItems,
+                    { opacity: 0, y: 14 },
+                    {
+                        opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
+                        stagger: 0.07,
+                        scrollTrigger: {
+                            trigger: footerItems[0],
+                            start: 'top 92%',
+                            toggleActions: 'play none none none'
+                        }
+                    }
+                );
+            }
+
+            // Section panels - subtle fade-up
+            document.querySelectorAll('.section-motion').forEach(section => {
+                gsap.fromTo(section,
+                    { opacity: 0, y: 18 },
+                    {
+                        opacity: 1, y: 0, duration: 0.6, ease: 'power3.out',
                         scrollTrigger: {
                             trigger: section,
-                            start: 'top 85%',
+                            start: 'top 88%',
                             toggleActions: 'play none none none'
                         }
                     }
@@ -308,8 +428,8 @@
             cards.forEach((card, i) => {
                 if (enter) {
                     gsap.fromTo(card,
-                        { opacity: 0, x: 20 },
-                        { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out', delay: i * 0.06 }
+                        { opacity: 0, x: 16 },
+                        { opacity: 1, x: 0, duration: 0.5, ease: 'power2.out', delay: i * 0.05 }
                     );
                 }
             });
