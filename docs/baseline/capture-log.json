@@ -1,0 +1,13 @@
+{
+  "capturedAt": "2026-07-31",
+  "serverUrl": "http://127.0.0.1:8765",
+  "viewports": {
+    "desktop": "1440x900",
+    "mobile": "390x844"
+  },
+  "pageErrors": {
+    "desktop": [],
+    "mobile": []
+  },
+  "notes": "No JavaScript page errors during baseline screenshot capture. Page intro waited 4s before capture."
+}

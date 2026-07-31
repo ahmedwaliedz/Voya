@@ -104,19 +104,25 @@
                 title: 'The Coffee Room',
                 subtitle: 'Specialty coffee, everyday rituals.',
                 desc: 'Crafted cups, warm energy, and the small daily moments that turn into something more.',
-                fallbackDesc: 'A Voya favorite from the coffee room.'
+                fallbackDesc: 'A Voya favorite from the coffee room.',
+                featuredImage: 'assets/images/voya-coffee-menu-generated.png',
+                featuredLabel: 'VOYA'
             },
             papa: {
                 title: 'The Healthy Room',
                 subtitle: 'Fresh plates, joyful balance.',
                 desc: 'Colorful bowls, mindful ingredients, and just enough comfort to keep it satisfying.',
-                fallbackDesc: 'A balanced choice from Papa Voya.'
+                fallbackDesc: 'A balanced choice from Papa Voya.',
+                featuredImage: 'assets/images/papa-healthy.png',
+                featuredLabel: 'Papa Voya'
             },
             mama: {
                 title: 'The Comfort Room',
                 subtitle: 'Comfort classics, made for sharing.',
                 desc: 'Generous plates, familiar flavors, and the warmth of home in every dish.',
-                fallbackDesc: 'A comfort pick from Mama Voya.'
+                fallbackDesc: 'A comfort pick from Mama Voya.',
+                featuredImage: 'assets/images/mama-comfort.png',
+                featuredLabel: 'Mama Voya'
             }
         };
 
@@ -829,6 +835,7 @@
             renderCategoryChips();
             renderMenuContent();
             setupProductRailDelegation();
+            updateMenuFeaturedImage('voya');
         }
 
         function renderBrandSwitch() {
@@ -858,6 +865,23 @@
                     <p class="room-intro-desc">${info.desc}</p>
                 </div>
             `;
+        }
+
+        function updateMenuFeaturedImage(brand) {
+            const info = brandInfo[brand];
+            if (!info) return;
+            const img = document.getElementById('menuFeaturedImg');
+            const label = document.getElementById('menuFeaturedLabel');
+            if (!img || !label) return;
+
+            img.style.opacity = '0';
+            setTimeout(() => {
+                img.src = info.featuredImage;
+                img.alt = info.featuredLabel + ' featured menu';
+                img.className = 'featured-img featured-img--' + brand;
+                label.textContent = info.featuredLabel;
+                img.style.opacity = '1';
+            }, 200);
         }
 
         function renderCategoryChips() {
@@ -949,6 +973,7 @@
             currentProductIndex = 0;
             renderBrandSwitch();
             renderRoomIntro();
+            updateMenuFeaturedImage(brand);
             renderCategoryChips();
             const chips = document.getElementById('categoryChips');
             if (chips) chips.scrollLeft = 0;
