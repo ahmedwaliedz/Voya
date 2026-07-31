@@ -1,7 +1,7 @@
 # Phase 0 — Baseline Record
 
-**Date:** 2026-07-31  
-**Git checkpoint:** Annotated tag `baseline/pre-implementation` (created with the Phase 0 baseline commit)  
+**Date:** 2026-07-31
+**Git checkpoint:** Annotated tag `baseline/pre-implementation` (created with the Phase 0 baseline commit)
 **Purpose:** Before/after comparison point for the VOYA scroll-story implementation.
 
 ---
