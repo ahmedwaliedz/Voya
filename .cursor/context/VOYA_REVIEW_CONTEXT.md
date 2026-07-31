@@ -20,9 +20,11 @@ This file is the authoritative review router for review sessions in the VOYA pro
 
 ## Guard routing
 
-- Production frontend and visual/responsive changes: use `.cursor/skills/voya-frontend-guard/SKILL.md`.
-- Documentation changes: use `.cursor/skills/voya-docs-guard/SKILL.md`.
-- Assets: frontend guard for technical/optimization checks plus docs guard when asset claims are documented.
+- Phase 2 implementation or review: use `.cursor/skills/voya-illustration-layer-prep/SKILL.md`.
+- Phases 3-8 implementation or review: use `.cursor/skills/voya-scroll-story-animation/SKILL.md`.
+- Production frontend and visual/responsive changes: use `.cursor/skills/voya-frontend-guard/SKILL.md` only when HTML, CSS, JavaScript, loading, layout, or browser behavior changed.
+- Documentation changes: use `.cursor/skills/voya-docs-guard/SKILL.md` only when docs or evidence claims changed.
+- Assets: phase skill first, then frontend guard for technical checks plus docs guard when asset claims are documented.
 - Mixed: run each applicable guard against the files it governs.
 - Load `.cursor/rules/voya-project-rules.mdc` for every review.
 - Read `.cursor/context/VOYA_REVIEW_CONTEXT.md` first; do not open deeper files unless the changed area matches.
@@ -30,17 +32,19 @@ This file is the authoritative review router for review sessions in the VOYA pro
 ## Required review process
 
 1. Identify the phase and its intended acceptance criteria.
-2. Identify the comparison reference.
-3. Inspect Git status and the exact diff (unstaged and staged).
-4. Confirm changed files are within phase scope.
-5. Inspect complete affected flows, not only isolated lines.
-6. Run relevant non-destructive checks.
-7. Compare implementation with baseline screenshots when visual behavior changed.
-8. Report findings by severity.
-9. Include exact file paths and line numbers.
-10. Label inference as `[inference]`.
-11. List testing gaps and residual risks.
-12. Give a final decision:
+2. Select the phase skill for the current phase.
+3. Identify the comparison reference.
+4. Inspect Git status and the exact diff (unstaged and staged).
+5. Confirm changed files are within phase scope.
+6. Choose only the guards that match the changed files.
+7. Inspect complete affected flows, not only isolated lines.
+8. Run relevant non-destructive checks.
+9. Compare implementation with baseline screenshots when visual behavior changed.
+10. Report findings by severity.
+11. Include exact file paths and line numbers.
+12. Label inference as `[inference]`.
+13. List testing gaps and residual risks.
+14. Give a final decision:
     - `Approved`
     - `Minor changes required`
     - `Changes required`

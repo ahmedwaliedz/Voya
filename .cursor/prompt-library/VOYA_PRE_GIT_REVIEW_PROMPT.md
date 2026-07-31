@@ -6,10 +6,12 @@ Use this prompt to run a strict, evidence-based pre-Git review of a completed VO
 
 1. Read `.cursor/context/VOYA_REVIEW_CONTEXT.md`.
 2. Read `.cursor/rules/voya-project-rules.mdc`.
-3. Identify the completed phase and its acceptance criteria.
-4. Determine the correct phase-start comparison reference. Do not assume `baseline/pre-implementation` is correct for every phase.
-5. Inspect `git status`, unstaged diff, staged diff, and commits created for the phase.
-6. Never assume all current changes belong to the phase. Confirm every changed file is in scope.
+3. Identify the completed phase, its acceptance criteria, and the correct phase skill.
+4. Use `.cursor/skills/voya-illustration-layer-prep/SKILL.md` for Phase 2 or `.cursor/skills/voya-scroll-story-animation/SKILL.md` for Phases 3-8.
+5. Determine the correct phase-start comparison reference. Do not assume `baseline/pre-implementation` is correct for every phase.
+6. Decide which guards apply from the changed files only.
+7. Inspect `git status`, unstaged diff, staged diff, and commits created for the phase.
+8. Never assume all current changes belong to the phase. Confirm every changed file is in scope.
 
 ## Run safe checks
 
@@ -41,7 +43,8 @@ Also verify:
 - Keyboard behavior.
 - Menu, cart, and WhatsApp behavior.
 - Animation and reduced-motion behavior when animation changed.
-- Documentation using `.cursor/skills/voya-docs-guard/SKILL.md`.
+- Documentation using `.cursor/skills/voya-docs-guard/SKILL.md` only when docs or evidence claims changed.
+- Frontend behavior using `.cursor/skills/voya-frontend-guard/SKILL.md` only when HTML, CSS, JavaScript, loading, layout, or browser behavior changed.
 
 ## Git safety
 
@@ -50,6 +53,8 @@ Also verify:
 - Do not commit or push during review.
 - Do not modify files unless fixes are explicitly authorized.
 - Report if the branch is ahead or behind its remote.
+- For pre-commit review, verify the working tree scope: staged and unstaged changes only.
+- For pre-push review, verify the exact commits ahead of remote and the net diff they introduce.
 - Verify what will be committed or pushed.
 
 ## Output format

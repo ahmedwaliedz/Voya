@@ -7,6 +7,7 @@ Project-specific agent guidance for the VOYA static frontend (`index.html`, `sty
 Keep VOYA implementation safe and verifiable across phased work:
 
 - Safe frontend implementation that preserves brand and behavior.
+- Phase-specific implementation with the approved phase skill before any guard review.
 - Phase-by-phase validation against the approved plan.
 - Documentation verification against the real implementation and Git data.
 - Full pre-Git review before commit or push.
@@ -18,15 +19,29 @@ Keep VOYA implementation safe and verifiable across phased work:
 |------|------|
 | `.cursor/rules/voya-project-rules.mdc` | Always-relevant project rules: scope control, brand protection, frontend quality, accessibility, responsive behavior, performance, security. |
 | `.cursor/context/VOYA_REVIEW_CONTEXT.md` | Authoritative review router: categories, required process, evidence standard, final decisions. |
+| `.cursor/skills/voya-illustration-layer-prep/SKILL.md` | Phase 2 skill for preparing layered 2D illustration assets before scroll animation work begins. |
+| `.cursor/skills/voya-scroll-story-animation/SKILL.md` | Phase 3-8 skill for building and reviewing the GSAP / ScrollTrigger scroll-story scenes. |
 | `.cursor/skills/voya-frontend-guard/SKILL.md` | Guard for changed HTML, CSS, JavaScript, interactions, responsive behavior, accessibility, animation, and performance. |
 | `.cursor/skills/voya-docs-guard/SKILL.md` | Guard that verifies phase reports, plans, baseline documents, and claims against actual implementation and Git data. |
 | `.cursor/prompt-library/VOYA_PRE_GIT_REVIEW_PROMPT.md` | Reusable strict prompt for a full pre-Git review before commit or push. |
 
 ## When to use each guard
 
+- **voya-illustration-layer-prep**: during Phase 2 work on the approved 2D illustration layers before any motion story is built.
+- **voya-scroll-story-animation**: during Phases 3-8 for scroll-story implementation and review once the Phase 2 artwork is accepted.
 - **voya-frontend-guard**: after implementing or changing frontend code, before marking a phase complete, and during any review that touches HTML, CSS, or JavaScript.
 - **voya-docs-guard**: when phase reports, plans, baseline documents, or README claims are created or changed.
 - **Pre-Git review prompt**: before committing or pushing a completed phase.
+
+## Required phase workflow
+
+1. Implement the current phase with its approved phase skill.
+2. Select only the guards that match the files actually changed.
+3. Run the final user or Codex phase review.
+4. Run the pre-Git review prompt before any commit.
+5. Commit only the approved scope.
+6. Run the pre-push review against the exact commits ahead of remote.
+7. Push only after approval and explicit authorization.
 
 ## Implementation mode vs review-only mode
 
