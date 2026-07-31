@@ -1,0 +1,75 @@
+---
+description: "VOYA project rules - apply when working on the VOYA static frontend (HTML, CSS, JavaScript), its documentation, or its image and animation assets"
+globs: ["index.html", "style.css", "script.js", "assets/**", "docs/**", "**/*.md"]
+alwaysApply: false
+---
+
+# VOYA Project Rules
+
+These rules apply to the VOYA static frontend project: `index.html`, `style.css`, `script.js`, documentation, and image/animation work.
+
+## Scope control
+
+- Follow the approved phase plan.
+- Do not begin a later phase early.
+- Make the smallest complete change for the current phase.
+- Do not modify unrelated files.
+- Preserve existing menu, cart, WhatsApp, and navigation behavior unless the phase explicitly changes it.
+- Inspect neighboring code before introducing a new pattern.
+- Do not add dependencies unless explicitly required by the approved phase.
+
+## Brand protection
+
+- Preserve VOYA colors, typography, tone, illustrations, faces, glasses, proportions, line weight, and character identity.
+- Characters remain 2D illustrations.
+- Use layered 2D animation for character movement.
+- Do not convert characters to true 3D.
+- Plates, cups, food, ingredients, steam, shadows, and background elements may use depth-like 2D transforms.
+- Do not generate guessed character angles or redesign missing body parts.
+
+## Frontend quality
+
+- Prefer native HTML, CSS, and JavaScript.
+- Reuse existing project patterns.
+- Keep menu and cart data in one source of truth.
+- The latest menu selection must win during rapid switching.
+- Cancel or replace stale transitions.
+- Keep functions focused and naming clear.
+- Do not leave dead code, debug logs, commented-out experiments, or unused assets.
+
+## Accessibility
+
+- Preserve semantic HTML.
+- All interactive controls must be keyboard accessible.
+- Focus states must be visible.
+- Images must have appropriate alternative text.
+- Maintain readable contrast and text size.
+- Support `prefers-reduced-motion`.
+- Do not make essential content dependent on animation.
+
+## Responsive behavior
+
+- Verify desktop and mobile layouts.
+- Avoid horizontal overflow.
+- Avoid clipped characters, menus, buttons, and cart content.
+- Do not rely only on hover.
+- Scroll-driven scenes must have a simpler mobile behavior when required.
+
+## Performance
+
+- Optimize large images.
+- Use suitable WebP, PNG, or SVG formats.
+- Avoid unnecessary transparent canvas space.
+- Use lazy loading for below-the-fold images where appropriate.
+- Prevent layout shifts by defining dimensions or aspect ratios.
+- Animate `transform` and `opacity` where possible.
+- Avoid scroll handlers that repeatedly trigger layout calculations.
+- No true 3D library unless a later approved requirement proves it necessary.
+
+## Security
+
+- No secrets, credentials, API keys, or private data in committed files.
+- Escape or safely insert dynamic text.
+- Avoid unsafe `innerHTML` for untrusted content.
+- External windows must use `noopener,noreferrer`.
+- Validate generated WhatsApp text and URL encoding.
