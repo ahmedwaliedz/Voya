@@ -11,16 +11,16 @@
                 subtitle: "Specialty coffee culture, quality, everyday rituals",
                 categories: [
                     { name: "Hot Coffee", products: [
-                        {name:"Espresso Single",price:35},{name:"Espresso Double",price:45},{name:"Machiato Single",price:45},{name:"Machiato Double",price:50},{name:"Flat White",price:60},{name:"Cortado",price:60},{name:"Americano",price:60},{name:"Cappuccino",price:80},{name:"Latte",price:80},{name:"Turkish Coffee Single",price:25},{name:"Turkish Coffee Double",price:35}
+                        {name:"Espresso Single",price:35},{name:"Espresso Double",price:45},{name:"Macchiato Single",price:45},{name:"Macchiato Double",price:50},{name:"Flat White",price:60},{name:"Cortado",price:60},{name:"Americano",price:60},{name:"Cappuccino",price:80},{name:"Latte",price:80},{name:"Turkish Coffee Single",price:25},{name:"Turkish Coffee Double",price:35}
                     ]},
                     { name: "Hot Beverage Flavour", products: [
-                        {name:"Spanish Latte",price:100},{name:"White Mocha",price:100},{name:"Mocha Latte",price:100},{name:"Salted Caramel",price:100},{name:"Caramel Machiato",price:100},{name:"Peanut Latte",price:105},{name:"Pistachio Latte",price:105},{name:"Lotus Latte",price:105},{name:"Nutella Latte",price:105},{name:"French Coffee",price:40},{name:"Hazelnut Coffee",price:40}
+                        {name:"Spanish Latte",price:100},{name:"White Mocha",price:100},{name:"Mocha Latte",price:100},{name:"Salted Caramel",price:100},{name:"Caramel Macchiato",price:100},{name:"Peanut Latte",price:105},{name:"Pistachio Latte",price:105},{name:"Lotus Latte",price:105},{name:"Nutella Latte",price:105},{name:"French Coffee",price:40},{name:"Hazelnut Coffee",price:40}
                     ]},
                     { name: "Hot Beverage Without Coffee", products: [
                         {name:"Classic Matcha",price:105},{name:"White Matcha",price:105},{name:"Spanish Matcha",price:105},{name:"Hot Chocolate",price:90},{name:"White Hot Chocolate",price:90},{name:"Red Tea",price:25},{name:"Green Tea",price:25}
                     ]},
                     { name: "Cold Beverage Cubes", products: [
-                        {name:"Ice Americano",price:60},{name:"Ice Latte",price:80},{name:"Ice Spanish",price:100},{name:"Ice Mocha",price:100},{name:"Ice White Mocha",price:100},{name:"Ice Caramel Machiato",price:100},{name:"Ice Salted Caramel",price:100},{name:"Ice Banana Coffee",price:100},{name:"Ice Vanilla Double Cream",price:105},{name:"Ice Pistachio Latte",price:105},{name:"Ice Nutella Latte",price:105}
+                        {name:"Ice Americano",price:60},{name:"Ice Latte",price:80},{name:"Ice Spanish",price:100},{name:"Ice Mocha",price:100},{name:"Ice White Mocha",price:100},{name:"Ice Caramel Macchiato",price:100},{name:"Ice Salted Caramel",price:100},{name:"Ice Banana Coffee",price:100},{name:"Ice Vanilla Double Cream",price:105},{name:"Ice Pistachio Latte",price:105},{name:"Ice Nutella Latte",price:105}
                     ]},
                     { name: "Cold Beverage Milk Blend", products: [
                         {name:"Lotus Milkshake",price:70},{name:"Pistachio Milkshake",price:80},{name:"Nutella Milkshake",price:70},{name:"Blueberry Milkshake",price:70},{name:"Peach Milkshake",price:70},{name:"Chocolate Milkshake",price:70},{name:"Vanilla Milkshake",price:70},{name:"Caramel Milkshake",price:70}
@@ -98,6 +98,10 @@
         let currentBrand = 'voya';
         let currentCategoryIndex = 0;
         let currentProductIndex = 0;
+        let menuTransitionGeneration = 0;
+        let menuTransitionTimer = null;
+        let featuredImageTimer = null;
+        let productCardsTimer = null;
 
         const brandInfo = {
             voya: {
@@ -826,6 +830,74 @@
             setupProductRailDelegation();
         });
 
+        function formatPrice(amount) {
+            return `${amount} <span class="price-currency">EGP</span>`;
+        }
+
+        function beginMenuTransition() {
+            menuTransitionGeneration++;
+            if (menuTransitionTimer) {
+                clearTimeout(menuTransitionTimer);
+                menuTransitionTimer = null;
+            }
+            if (featuredImageTimer) {
+                clearTimeout(featuredImageTimer);
+                featuredImageTimer = null;
+            }
+            if (productCardsTimer) {
+                clearTimeout(productCardsTimer);
+                productCardsTimer = null;
+            }
+            const rail = document.getElementById('productRail');
+            if (rail && hasGSAP && !reduceMotion) {
+                gsap.killTweensOf(rail.querySelectorAll('.rail-card'));
+            }
+            return menuTransitionGeneration;
+        }
+
+        function scheduleMenuUpdate(generation, callback, delayMs) {
+            if (delayMs <= 0 || !hasGSAP || reduceMotion) {
+                if (generation === menuTransitionGeneration) callback();
+                return;
+            }
+            menuTransitionTimer = setTimeout(() => {
+                menuTransitionTimer = null;
+                if (generation === menuTransitionGeneration) callback();
+            }, delayMs);
+        }
+
+        function transitionMenuContent(callback, options = {}) {
+            const generation = menuTransitionGeneration;
+            const {
+                x = -25,
+                scale = 0.88,
+                duration = 0.28,
+                baseDelay = 280,
+                stagger = 30
+            } = options;
+            const oldRail = document.getElementById('productRail');
+
+            if (oldRail && hasGSAP && !reduceMotion) {
+                const oldCards = oldRail.querySelectorAll('.rail-card');
+                if (oldCards.length) {
+                    oldCards.forEach((card, i) => {
+                        gsap.to(card, {
+                            opacity: 0,
+                            x,
+                            scale,
+                            duration,
+                            ease: 'power2.in',
+                            delay: i * 0.03
+                        });
+                    });
+                    scheduleMenuUpdate(generation, callback, baseDelay + oldCards.length * stagger);
+                    return;
+                }
+            }
+
+            callback();
+        }
+
         function initMenu() {
             currentBrand = 'voya';
             currentCategoryIndex = 0;
@@ -873,9 +945,12 @@
             const img = document.getElementById('menuFeaturedImg');
             const label = document.getElementById('menuFeaturedLabel');
             if (!img || !label) return;
+            const generation = menuTransitionGeneration;
 
             img.style.opacity = '0';
-            setTimeout(() => {
+            featuredImageTimer = setTimeout(() => {
+                featuredImageTimer = null;
+                if (generation !== menuTransitionGeneration) return;
                 img.src = info.featuredImage;
                 img.alt = info.featuredLabel + ' featured menu';
                 img.className = 'featured-img featured-img--' + brand;
@@ -930,7 +1005,7 @@
                         ${prod.desc ? `<div class="rail-card-desc">${escapeHtml(prod.desc)}</div>` : ''}
                         <div class="rail-card-cat">${escapeHtml(category.name)}</div>
                         <div class="rail-card-bottom">
-                            <div class="rail-card-price">${prod.price} <span style="font-size:0.6rem;font-weight:400;opacity:0.6">EGP</span></div>
+                            <div class="rail-card-price">${formatPrice(prod.price)}</div>
                             ${qty > 0 ? `
                                 <div class="rail-card-qty">
                                     <button type="button" class="rail-card-qty-btn" data-product-name="${safeName}" data-action="decrease" aria-label="Decrease quantity">&minus;</button>
@@ -963,11 +1038,17 @@
                 if (newRail) newRail.scrollLeft = savedScroll;
             }
 
-            setTimeout(() => animateProductCards(true), 50);
+            const generation = menuTransitionGeneration;
+            productCardsTimer = setTimeout(() => {
+                productCardsTimer = null;
+                if (generation !== menuTransitionGeneration) return;
+                animateProductCards(true);
+            }, 50);
         }
 
         function switchBrand(brand) {
             if (brand === currentBrand) return;
+            beginMenuTransition();
             currentBrand = brand;
             currentCategoryIndex = 0;
             currentProductIndex = 0;
@@ -978,63 +1059,24 @@
             const chips = document.getElementById('categoryChips');
             if (chips) chips.scrollLeft = 0;
 
-            const oldRail = document.getElementById('productRail');
-            if (oldRail && hasGSAP && !reduceMotion) {
-                const oldCards = oldRail.querySelectorAll('.rail-card');
-                if (oldCards.length) {
-                    oldCards.forEach((card, i) => {
-                        gsap.to(card, {
-                            opacity: 0,
-                            x: -25,
-                            scale: 0.88,
-                            duration: 0.28,
-                            ease: 'power2.in',
-                            delay: i * 0.03
-                        });
-                    });
-                    setTimeout(() => {
-                        renderMenuContent();
-                        setupProductRailDelegation();
-                    }, 280 + oldCards.length * 30);
-                    return;
-                }
-            }
-
-            renderMenuContent();
-            setupProductRailDelegation();
+            transitionMenuContent(() => {
+                renderMenuContent();
+                setupProductRailDelegation();
+            });
         }
 
         function switchCategory(idx) {
+            if (idx === currentCategoryIndex) return;
+            beginMenuTransition();
             currentCategoryIndex = idx;
             currentProductIndex = 0;
             renderCategoryChips();
 
-            const oldRail = document.getElementById('productRail');
-            if (oldRail && hasGSAP && !reduceMotion) {
-                const oldCards = oldRail.querySelectorAll('.rail-card');
-                if (oldCards.length) {
-                    oldCards.forEach((card, i) => {
-                        gsap.to(card, {
-                            opacity: 0,
-                            x: -20,
-                            scale: 0.9,
-                            duration: 0.25,
-                            ease: 'power2.in',
-                            delay: i * 0.03
-                        });
-                    });
-                    setTimeout(() => {
-                        renderMenuContent();
-                        setupProductRailDelegation();
-                        requestAnimationFrame(centerActiveCategoryChip);
-                    }, 250 + oldCards.length * 30);
-                    return;
-                }
-            }
-
-            renderMenuContent();
-            setupProductRailDelegation();
-            requestAnimationFrame(centerActiveCategoryChip);
+            transitionMenuContent(() => {
+                renderMenuContent();
+                setupProductRailDelegation();
+                requestAnimationFrame(centerActiveCategoryChip);
+            }, { x: -20, scale: 0.9, duration: 0.25, baseDelay: 250 });
         }
 
         function selectProduct(idx) {
@@ -1243,7 +1285,7 @@
                 const safeName = escapeHtml(name);
                 if (qty > 0) {
                     bottom.innerHTML = `
-                        <div class="rail-card-price">${ci.price} <span style="font-size:0.6rem;font-weight:400;opacity:0.6">EGP</span></div>
+                        <div class="rail-card-price">${formatPrice(ci.price)}</div>
                         <div class="rail-card-qty">
                             <button type="button" class="rail-card-qty-btn" data-product-name="${safeName}" data-action="decrease" aria-label="Decrease quantity">&minus;</button>
                             <span class="rail-card-qty-val">${qty}</span>
@@ -1254,7 +1296,7 @@
                     const priceEl = card.querySelector('.rail-card-price');
                     const price = priceEl ? parseInt(priceEl.textContent) : 0;
                     bottom.innerHTML = `
-                        <div class="rail-card-price">${price} <span style="font-size:0.6rem;font-weight:400;opacity:0.6">EGP</span></div>
+                        <div class="rail-card-price">${formatPrice(price)}</div>
                         <button type="button" class="rail-card-add" data-product-name="${safeName}" data-product-price="${price}" aria-label="Add ${safeName}">+</button>
                     `;
                 }
@@ -1271,7 +1313,7 @@
             const count = cart.reduce((s, i) => s + i.qty, 0);
             const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
             document.getElementById('cartCount').textContent = count;
-            document.getElementById('cartTotal').innerHTML = `${total} <span style="font-size:0.75rem">EGP</span>`;
+            document.getElementById('cartTotal').innerHTML = formatPrice(total);
             document.getElementById('whatsappBtn').disabled = cart.length === 0;
 
             const orderStrip = document.getElementById('orderStrip');
@@ -1283,7 +1325,7 @@
                 orderStrip.classList.add('show');
                 document.body.classList.add('order-strip-visible');
                 document.getElementById('orderStripCount').textContent = count + ' item' + (count !== 1 ? 's' : '');
-                document.getElementById('orderStripTotal').innerHTML = total + ' <span>EGP</span>';
+                document.getElementById('orderStripTotal').innerHTML = formatPrice(total);
             } else {
                 if (orderStrip.classList.contains('show')) {
                     animateCartFeedback(null, 'orderStripOut');
@@ -1307,10 +1349,12 @@
                             <button class="cart-item-remove" onclick="removeFromCart('${item.name}')">Remove</button>
                         </div>
                     </div>
-                    <div class="cart-item-total">${item.price * item.qty} EGP</div>
+                    <div class="cart-item-total">${formatPrice(item.price * item.qty)}</div>
                 </div>`).join('');
             }
         }
+
+        let cartOpener = null;
 
         function trapFocus(e) {
             const drawer = document.getElementById('cartDrawer');
@@ -1329,21 +1373,42 @@
                 }
             }
             if (e.key === 'Escape') {
-                toggleCart();
+                toggleCart(e);
             }
         }
 
-        function toggleCart() {
-            document.getElementById('cartOverlay').classList.toggle('open');
-            document.getElementById('cartDrawer').classList.toggle('open');
-            const drawerOpen = document.getElementById('cartDrawer').classList.contains('open');
-            document.body.style.overflow = drawerOpen ? 'hidden' : '';
+        function toggleCart(event) {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            const drawerOpen = !drawer.classList.contains('open');
+
             if (drawerOpen) {
+                const trigger = event?.currentTarget;
+                if (trigger instanceof HTMLElement && trigger.id !== 'cartOverlay' && trigger.id !== 'cartClose') {
+                    cartOpener = trigger;
+                }
+            }
+
+            overlay.classList.toggle('open', drawerOpen);
+            drawer.classList.toggle('open', drawerOpen);
+            document.body.style.overflow = drawerOpen ? 'hidden' : '';
+
+            if (drawerOpen) {
+                drawer.removeAttribute('inert');
+                drawer.setAttribute('aria-hidden', 'false');
                 document.addEventListener('keydown', trapFocus);
                 document.getElementById('cartClose')?.focus();
             } else {
                 document.removeEventListener('keydown', trapFocus);
+                drawer.setAttribute('inert', '');
+                drawer.setAttribute('aria-hidden', 'true');
+                const opener = cartOpener;
+                cartOpener = null;
+                if (opener && opener.isConnected && !opener.disabled) {
+                    opener.focus();
+                }
             }
+
             const count = cart.reduce((s, i) => s + i.qty, 0);
             const orderStrip = document.getElementById('orderStrip');
             if (count > 0 && !drawerOpen) {
@@ -1359,7 +1424,9 @@
             cart.forEach(i => msg += `${i.qty}x ${i.name} - ${i.price * i.qty} EGP\n`);
             const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
             msg += `\nTotal: ${total} EGP`;
-            window.open(`https://wa.me/201050000598?text=${encodeURIComponent(msg)}`, '_blank');
+            const url = `https://wa.me/201050000598?text=${encodeURIComponent(msg)}`;
+            const whatsappWindow = window.open(url, '_blank', 'noopener,noreferrer');
+            if (whatsappWindow) whatsappWindow.opener = null;
         }
 
         function showToast(msg) {

@@ -471,18 +471,23 @@
             letter-spacing: 0.15em;
             text-transform: uppercase;
             text-decoration: none;
-            border: none;
+            border: 2px solid var(--deep-black);
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
         @media (hover: hover) and (pointer: fine) {
             .btn-primary:hover {
                 background: var(--terracotta);
+                border-color: var(--terracotta);
                 transform: translateY(-4px);
                 box-shadow: 0 14px 35px rgba(8, 9, 7, 0.2);
             }
         }
         .btn-primary:active { transform: translateY(0); box-shadow: none; }
+        .btn-primary:focus-visible {
+            outline: 2px solid var(--terracotta);
+            outline-offset: 3px;
+        }
         .btn-secondary {
             background: transparent;
             color: var(--deep-black);
@@ -506,6 +511,10 @@
             }
         }
         .btn-secondary:active { transform: translateY(0); box-shadow: none; }
+        .btn-secondary:focus-visible {
+            outline: 2px solid var(--terracotta);
+            outline-offset: 3px;
+        }
 
         /* Cinematic keyframes */
         @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
@@ -725,13 +734,17 @@
             color: var(--soft-ivory);
             text-decoration: none;
             border-radius: 2rem;
-            transition: all 0.3s ease;
+            border: 2px solid var(--deep-black);
+            transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
             cursor: pointer;
-            border: none;
             position: relative;
             z-index: 1;
         }
-        .mood-card-btn:hover { background: var(--terracotta); }
+        .mood-card-btn:hover { background: var(--terracotta); border-color: var(--terracotta); }
+        .mood-card-btn:focus-visible {
+            outline: 2px solid var(--terracotta);
+            outline-offset: 3px;
+        }
 
         /* ===== MENU SECTION ===== */
         .menu-section {
@@ -761,9 +774,55 @@
         }
         .menu-subtitle {
             font-size: 1rem;
-            opacity: 0.7;
-            max-width: 500px;
+            line-height: 1.65;
+            color: rgba(8, 9, 7, 0.78);
+            max-width: 34rem;
+            margin: 0 auto 1.25rem;
+        }
+        .menu-flow {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.65rem 1.25rem;
+            padding: 0;
             margin: 0 auto;
+            max-width: 42rem;
+        }
+        .menu-flow li {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: rgba(8, 9, 7, 0.82);
+            line-height: 1.4;
+        }
+        .menu-flow-step {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.35rem;
+            height: 1.35rem;
+            border-radius: 50%;
+            background: var(--deep-black);
+            color: var(--soft-ivory);
+            font-size: 0.62rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .price-currency {
+            font-size: 0.62rem;
+            font-weight: 500;
+            opacity: 0.55;
+            margin-left: 2px;
+        }
+        .cart-total-value .price-currency {
+            font-size: 0.75rem;
+        }
+        .order-strip-total .price-currency {
+            font-size: 0.8rem;
         }
 
         /* Brand Room Switch */
@@ -870,9 +929,10 @@
         }
         .room-intro-desc {
             font-size: 0.95rem;
-            line-height: 1.8;
-            opacity: 0.85;
-            max-width: 600px;
+            line-height: 1.75;
+            color: inherit;
+            opacity: 0.9;
+            max-width: 38rem;
         }
 
         /* Category Bar */
@@ -1096,12 +1156,6 @@
             font-weight: 700;
             color: var(--deep-black);
             letter-spacing: -0.02em;
-        }
-        .rail-card-price span {
-            font-size: 0.62rem;
-            font-weight: 500;
-            opacity: 0.5;
-            margin-left: 2px;
         }
         .rail-card-add {
             width: 40px;
@@ -1588,6 +1642,30 @@
             }
         }
         .whatsapp-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .whatsapp-btn:focus-visible:not(:disabled) {
+            outline: 2px solid var(--deep-black);
+            outline-offset: 3px;
+        }
+
+        /* ===== KEYBOARD FOCUS ===== */
+        :focus:not(:focus-visible) { outline: none; }
+        .brand-room:focus-visible,
+        .category-chip:focus-visible,
+        .category-nav-btn:focus-visible,
+        .product-rail-btn:focus-visible,
+        .rail-card-add:focus-visible,
+        .rail-card-qty-btn:focus-visible,
+        .cart-btn:focus-visible,
+        .order-strip-btn:focus-visible,
+        .cart-close:focus-visible,
+        .cart-item-qty-btn:focus-visible,
+        .cart-item-remove:focus-visible,
+        .mobile-menu-btn:focus-visible,
+        .nav-links a:focus-visible,
+        .location-btn:focus-visible {
+            outline: 2px solid var(--terracotta);
+            outline-offset: 3px;
+        }
 
         /* ===== TOAST ===== */
         .toast {
@@ -1870,6 +1948,12 @@
             .story-text-right { flex: none; width: 100%; }
             .menu-section { padding: 4rem 0 7rem; overflow-x: hidden; }
             .menu-header { padding: 0 1.5rem 2rem; }
+            .menu-flow {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                padding: 0 0.25rem;
+            }
             .brand-switch { padding: 0 1rem 1.5rem; gap: 0.5rem; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
             .brand-switch::-webkit-scrollbar { display: none; }
             .brand-room { min-width: 0; flex: 0 0 calc(33.33% - 0.3rem); padding: 0.85rem 0.25rem; }
