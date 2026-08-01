@@ -1,0 +1,23 @@
+{
+  "mama": {
+    "mama-arm-right.png": "62744ae8fabb19318d2e259b47ce63ebf3ba219d306d0338f7fe18e2bb65bb29",
+    "mama-body.png": "bf61360662c6f14f42d8d031cc9c6427f764c62ed7a932720ae1f6328753ac0c",
+    "mama-head.png": "ad22f2b6aece59ea661cdd6050464d48224957b807e5b7907847081c6ac7f953",
+    "mama-mobile-fallback.png": "c727161f4751db6bd4da4d6553aa9acb51be7508533eeb5b65a15a18b9826b54",
+    "mama-pizza.png": "f35efc62b27d4c3d41bc48d4a91e566dca92088ea4abb47f31c26608cd41243b",
+    "mama-shadow.png": "578b8986c8b2296a2ae752ec4670f2b4ac1b04e7b953d627ce93d9f700c6a946",
+    "mama-source-reference.png": "c727161f4751db6bd4da4d6553aa9acb51be7508533eeb5b65a15a18b9826b54",
+    "manifest.json": "095b6edf6cf03733ebfe7f7cabbb2027271297b35af3a8acb6406111e9e9a292"
+  },
+  "voya": {
+    "manifest.json": "f5edfa4122970da2cf8681eff44a2eb4b88a9e9a1a649ae5511d0f5a65f5735b",
+    "voya-arm-right.png": "79acabb0d6fe3709321b1fa71f95cf89a24dbcc7ea0dc5ba6d9dd7dd94762a6b",
+    "voya-body.png": "f444c1b36d9d77c72149bcc0cda60fcd02c86fd82f65da216adcc71170d23a49",
+    "voya-cup.png": "86ca9c7912c5937716575db96fec678b338ac449e0051b18c41e83bd44b68ccd",
+    "voya-head.png": "7c61959a32c9b8e4dcb11d8f7f78e7dc8bad484bc7cd5e68ab2c11d15b7f4c6e",
+    "voya-mobile-fallback.png": "819e40b52e48bed647482cb8a7b3ee66511890ef51bbd97ca7926841d8b83957",
+    "voya-shadow.png": "578b8986c8b2296a2ae752ec4670f2b4ac1b04e7b953d627ce93d9f700c6a946",
+    "voya-source-reference.png": "819e40b52e48bed647482cb8a7b3ee66511890ef51bbd97ca7926841d8b83957"
+  },
+  "registry": "f2652298bd18a39b2e6407f73ae0110c481d21f94d4ddf709bea71b5b1f3bd99"
+}

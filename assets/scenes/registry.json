@@ -1,0 +1,19 @@
+{
+  "phase": 2,
+  "generatedBy": "docs/phase2/prepare-layers.py",
+  "phaseStartCommit": "17bef48",
+  "characters": [
+    "papa",
+    "mama",
+    "voya"
+  ],
+  "manifests": {
+    "papa": "assets/scenes/papa/manifest.json",
+    "mama": "assets/scenes/mama/manifest.json",
+    "voya": "assets/scenes/voya/manifest.json",
+    "house": "assets/scenes/house/manifest.json"
+  },
+  "staticAssets": {
+    "house": "assets/scenes/house/manifest.json"
+  }
+}

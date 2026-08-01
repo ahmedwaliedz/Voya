@@ -1,0 +1,269 @@
+{
+  "character": "papa",
+  "phase": 2,
+  "source": {
+    "path": "assets/images/temporary/papa-temp-clean.png",
+    "bbox": {
+      "x0": 174,
+      "y0": 133,
+      "x1": 755,
+      "y1": 1547
+    },
+    "sourceDimensions": {
+      "width": 922,
+      "height": 1706
+    },
+    "note": "Clean transparent Papa from papa-temp-clean.png (healthy plate pose, single character)."
+  },
+  "sceneCanvas": {
+    "width": 581,
+    "height": 1414,
+    "originInSource": {
+      "x": 174,
+      "y": 133
+    },
+    "aspectRatio": 0.4109
+  },
+  "jointExpandPx": 8,
+  "layerOverlaps": [
+    {
+      "a": "papa-serving-group",
+      "b": "papa-body",
+      "pixels": 14661
+    }
+  ],
+  "jointOverlaps": [
+    {
+      "serving": "papa-serving-group",
+      "body": "papa-body",
+      "pixels": 14661,
+      "percentOfServing": 15.89
+    }
+  ],
+  "layers": [
+    {
+      "id": "papa-shadow",
+      "file": "papa-shadow.png",
+      "zIndex": 0,
+      "sceneOffset": {
+        "x": 170,
+        "y": 1372
+      },
+      "size": {
+        "width": 241,
+        "height": 37
+      },
+      "pivot": {
+        "x": 120.5,
+        "y": 18.5
+      },
+      "transformOrigin": "50% 50%",
+      "group": "shadow",
+      "generated": true
+    },
+    {
+      "id": "papa-body",
+      "file": "papa-body.png",
+      "zIndex": 10,
+      "sceneOffset": {
+        "x": 0,
+        "y": 376
+      },
+      "size": {
+        "width": 581,
+        "height": 1038
+      },
+      "pivot": {
+        "x": 290.5,
+        "y": 934.2
+      },
+      "transformOrigin": "50.0% 90.0%",
+      "group": "body",
+      "motion": null
+    },
+    {
+      "id": "papa-head",
+      "file": "papa-head.png",
+      "zIndex": 20,
+      "sceneOffset": {
+        "x": 34,
+        "y": 0
+      },
+      "size": {
+        "width": 475,
+        "height": 425
+      },
+      "pivot": {
+        "x": 235.56,
+        "y": 424
+      },
+      "transformOrigin": "49.6% 99.8%",
+      "group": "head",
+      "motion": null,
+      "jointZone": {
+        "x0": 162,
+        "y0": 339,
+        "x1": 418,
+        "y1": 480
+      }
+    },
+    {
+      "id": "papa-serving-group",
+      "file": "papa-serving-group.png",
+      "zIndex": 30,
+      "sceneOffset": {
+        "x": 4,
+        "y": 453
+      },
+      "size": {
+        "width": 576,
+        "height": 283
+      },
+      "pivot": {
+        "x": 149.76,
+        "y": 33.96
+      },
+      "transformOrigin": "26.0% 12.0%",
+      "group": "serving",
+      "motion": {
+        "rotate": [
+          -2,
+          2
+        ]
+      },
+      "jointZone": {
+        "x0": 92,
+        "y0": 339,
+        "x1": 336,
+        "y1": 509
+      }
+    }
+  ],
+  "mobileFallback": "papa-mobile-fallback.png",
+  "sourceReference": "papa-source-reference.png",
+  "motionBlocked": [
+    "papa-head"
+  ],
+  "servingMotionSelection": {
+    "candidates": [
+      [
+        -3,
+        3
+      ],
+      [
+        -2,
+        2
+      ],
+      [
+        -1,
+        1
+      ]
+    ],
+    "selected": [
+      -2,
+      2
+    ],
+    "endpointHolePixels": 46
+  },
+  "layerContract": {
+    "required": [
+      "papa-shadow",
+      "papa-body",
+      "papa-head",
+      "papa-serving-group"
+    ],
+    "servingGroupContains": [
+      "both arms",
+      "both hands",
+      "plate",
+      "all food"
+    ],
+    "headMotion": "static \u2014 independent rotation exposed outlines/hidden geometry"
+  },
+  "effectAssets": [
+    {
+      "id": "effect-grilled-protein",
+      "file": "effects/effect-grilled-protein.png",
+      "source": "assets/images/temporary/papa-temp-clean.png",
+      "cropOnCanvas": {
+        "x0": 244,
+        "y0": 480,
+        "x1": 418,
+        "y1": 650
+      },
+      "size": {
+        "width": 175,
+        "height": 171
+      },
+      "phase4Use": "Papa scene ingredient/food motion accent \u2014 not shown in neutral reconstruction"
+    },
+    {
+      "id": "effect-broccoli",
+      "file": "effects/effect-broccoli.png",
+      "source": "assets/images/temporary/papa-temp-clean.png",
+      "cropOnCanvas": {
+        "x0": 162,
+        "y0": 509,
+        "x1": 267,
+        "y1": 678
+      },
+      "size": {
+        "width": 106,
+        "height": 170
+      },
+      "phase4Use": "Papa scene ingredient/food motion accent \u2014 not shown in neutral reconstruction"
+    },
+    {
+      "id": "effect-grains",
+      "file": "effects/effect-grains.png",
+      "source": "assets/images/temporary/papa-temp-clean.png",
+      "cropOnCanvas": {
+        "x0": 232,
+        "y0": 593,
+        "x1": 360,
+        "y1": 735
+      },
+      "size": {
+        "width": 129,
+        "height": 143
+      },
+      "phase4Use": "Papa scene ingredient/food motion accent \u2014 not shown in neutral reconstruction"
+    },
+    {
+      "id": "effect-salad",
+      "file": "effects/effect-salad.png",
+      "source": "assets/images/temporary/papa-temp-clean.png",
+      "cropOnCanvas": {
+        "x0": 336,
+        "y0": 537,
+        "x1": 453,
+        "y1": 707
+      },
+      "size": {
+        "width": 118,
+        "height": 171
+      },
+      "phase4Use": "Papa scene ingredient/food motion accent \u2014 not shown in neutral reconstruction"
+    },
+    {
+      "id": "effect-tomato",
+      "file": "effects/effect-tomato.png",
+      "source": "assets/images/temporary/papa-temp-clean.png",
+      "cropOnCanvas": {
+        "x0": 360,
+        "y0": 593,
+        "x1": 429,
+        "y1": 707
+      },
+      "size": {
+        "width": 70,
+        "height": 115
+      },
+      "phase4Use": "Papa scene ingredient/food motion accent \u2014 not shown in neutral reconstruction"
+    }
+  ],
+  "evidence": {
+    "browserRoot": "docs/phase2/evidence/papa/browser",
+    "fallback": "docs/phase2/evidence/papa/browser/fallback_desktop.png"
+  }
+}

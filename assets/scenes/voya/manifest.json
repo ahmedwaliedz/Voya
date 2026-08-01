@@ -1,0 +1,191 @@
+{
+  "character": "voya",
+  "phase": 2,
+  "source": {
+    "path": "assets/images/temporary/voya-temp-clean.png",
+    "bbox": {
+      "x0": 198,
+      "y0": 193,
+      "x1": 795,
+      "y1": 1312
+    },
+    "sourceDimensions": {
+      "width": 1024,
+      "height": 1536
+    },
+    "note": "Clean transparent Voya from voya-temp-clean.png (cup + backpack + skateboard, single character)."
+  },
+  "sceneCanvas": {
+    "width": 597,
+    "height": 1119,
+    "originInSource": {
+      "x": 198,
+      "y": 193
+    },
+    "aspectRatio": 0.5335
+  },
+  "jointExpandPx": 8,
+  "layerOverlaps": [
+    {
+      "a": "voya-cup-group",
+      "b": "voya-body",
+      "pixels": 9162
+    }
+  ],
+  "jointOverlaps": [
+    {
+      "serving": "voya-cup-group",
+      "body": "voya-body",
+      "pixels": 9162,
+      "percentOfServing": 38.59
+    }
+  ],
+  "layers": [
+    {
+      "id": "voya-shadow",
+      "file": "voya-shadow.png",
+      "zIndex": 0,
+      "sceneOffset": {
+        "x": 178,
+        "y": 1077
+      },
+      "size": {
+        "width": 241,
+        "height": 37
+      },
+      "pivot": {
+        "x": 120.5,
+        "y": 18.5
+      },
+      "transformOrigin": "50% 50%",
+      "group": "shadow",
+      "generated": true
+    },
+    {
+      "id": "voya-body",
+      "file": "voya-body.png",
+      "zIndex": 10,
+      "sceneOffset": {
+        "x": 0,
+        "y": 198
+      },
+      "size": {
+        "width": 597,
+        "height": 921
+      },
+      "pivot": {
+        "x": 298.5,
+        "y": 810.48
+      },
+      "transformOrigin": "50.0% 88.0%",
+      "group": "body",
+      "motion": null
+    },
+    {
+      "id": "voya-head",
+      "file": "voya-head.png",
+      "zIndex": 20,
+      "sceneOffset": {
+        "x": 119,
+        "y": 0
+      },
+      "size": {
+        "width": 389,
+        "height": 381
+      },
+      "pivot": {
+        "x": 187.5,
+        "y": 380
+      },
+      "transformOrigin": "48.2% 99.7%",
+      "group": "head",
+      "motion": null,
+      "jointZone": {
+        "x0": 208,
+        "y0": 246,
+        "x1": 417,
+        "y1": 380
+      }
+    },
+    {
+      "id": "voya-cup-group",
+      "file": "voya-cup-group.png",
+      "zIndex": 30,
+      "sceneOffset": {
+        "x": 432,
+        "y": 402
+      },
+      "size": {
+        "width": 162,
+        "height": 214
+      },
+      "pivot": {
+        "x": 45.36,
+        "y": 21.4
+      },
+      "transformOrigin": "28.0% 10.0%",
+      "group": "serving",
+      "motion": {
+        "rotate": [
+          -3,
+          3
+        ]
+      },
+      "jointZone": {
+        "x0": 370,
+        "y0": 380,
+        "x1": 525,
+        "y1": 537
+      }
+    }
+  ],
+  "mobileFallback": "voya-mobile-fallback.png",
+  "sourceReference": "voya-source-reference.png",
+  "motionBlocked": [
+    "voya-head"
+  ],
+  "cupMotionSelection": {
+    "candidates": [
+      [
+        -3,
+        3
+      ],
+      [
+        -2,
+        2
+      ],
+      [
+        -1,
+        1
+      ]
+    ],
+    "selected": [
+      -3,
+      3
+    ],
+    "endpointHolePixels": 0,
+    "note": "selected [-3, 3] (endpoint holes=0)"
+  },
+  "layerContract": {
+    "required": [
+      "voya-shadow",
+      "voya-body",
+      "voya-head",
+      "voya-cup-group"
+    ],
+    "cupGroupContains": [
+      "cup",
+      "holding hand"
+    ],
+    "bodyContains": [
+      "backpack",
+      "skateboard",
+      "free arm"
+    ],
+    "headMotion": "static - independent rotation exposed outlines/hidden geometry"
+  },
+  "evidence": {
+    "browserRoot": "docs/phase2/evidence/voya/browser",
+    "fallback": "docs/phase2/evidence/voya/browser/fallback_desktop.png"
+  }
+}

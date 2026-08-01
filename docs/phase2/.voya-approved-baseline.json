@@ -1,0 +1,11 @@
+{
+  "voya": {
+    "manifest.json": "00a9d3f9c2c617b468677d1ddad909a016a5846c7cd76cfca47405159e83a52a",
+    "voya-body.png": "c736d5d8d11a6ff56fb5e2796cf3f61fa653dcc2befb1e37984dad3e20c576da",
+    "voya-cup-group.png": "c9942c013cbb284e82ee610676ba9d1b8e50e74551ed54c374ad3e14ea4d3465",
+    "voya-head.png": "8c7e00d988ca8a1acfc27c3fe15f23fa2ab887886c79d4f72c3f21473cd9d0e2",
+    "voya-mobile-fallback.png": "f1254919fc7368e1d2dbad51f645aae0ae5167ee14486b04b4ee04d23072c371",
+    "voya-shadow.png": "578b8986c8b2296a2ae752ec4670f2b4ac1b04e7b953d627ce93d9f700c6a946",
+    "voya-source-reference.png": "f1254919fc7368e1d2dbad51f645aae0ae5167ee14486b04b4ee04d23072c371"
+  }
+}

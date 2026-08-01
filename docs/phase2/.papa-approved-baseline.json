@@ -1,0 +1,16 @@
+{
+  "papa": {
+    "effects/effect-broccoli.png": "b52ea7a60873ea03c2a4128be7f4614e0e721a71da2a16bf5b9cb502dd6d8c27",
+    "effects/effect-grains.png": "988513fab92c265d7f0adb14945b443dcb705838926aa0879e38a369f815ced6",
+    "effects/effect-grilled-protein.png": "1775a22413f787f84ef278120adda8866b089de5793603a216ea619cc888259e",
+    "effects/effect-salad.png": "eee15f4c7e922a3b94c4466f2079eda4e43cb57e4f964416309bb8f8911b027a",
+    "effects/effect-tomato.png": "235d8ab8a537fd392a969b4bcfc260ebd977bed8621a78e5a2f1c73c09d9343d",
+    "manifest.json": "ae9c15bca5765a5e5abef26c6a5a335bd3ff34eb60813495e91de98ba48c035b",
+    "papa-body.png": "7e1190f1d7a984f6b24717e85d34a0d28033cd6cadbde56fd2f8f1f9fb073639",
+    "papa-head.png": "2e8504c6b80f99ec1127b071e87b25d19755204148821edb591e5dd23131e91f",
+    "papa-mobile-fallback.png": "34ac2ec63271a9a138b1afe621dc25aed6847ae1bdbcdc53271a5b98d1dc9b7e",
+    "papa-serving-group.png": "dc88a1166be24266626e883f9a20e6f778db5bca3bcec6f3580c1d549701d671",
+    "papa-shadow.png": "578b8986c8b2296a2ae752ec4670f2b4ac1b04e7b953d627ce93d9f700c6a946",
+    "papa-source-reference.png": "34ac2ec63271a9a138b1afe621dc25aed6847ae1bdbcdc53271a5b98d1dc9b7e"
+  }
+}

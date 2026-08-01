@@ -1,0 +1,27 @@
+{
+  "asset": "house",
+  "phase": 2,
+  "type": "static-2d-background",
+  "source": {
+    "path": "assets/images/temporary/house-temp-clean.png",
+    "sourceDimensions": {
+      "width": 1672,
+      "height": 941
+    },
+    "note": "Approved temporary house - single static 2D background, not split into fake 3D pieces. Branding text reserved for later semantic HTML/SVG overlay."
+  },
+  "file": "house-static.png",
+  "size": {
+    "width": 1672,
+    "height": 941
+  },
+  "validation": {
+    "transparentBackground": true,
+    "magentaPixels": 0,
+    "splitIntoLayers": false,
+    "rasterBrandingText": false
+  },
+  "evidence": {
+    "browserRoot": "docs/phase2/evidence/house/browser"
+  }
+}

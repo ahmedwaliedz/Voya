@@ -1,0 +1,11 @@
+{
+  "mama": {
+    "mama-body.png": "544059c2e515c0420a6d9b8a93edf17a7e186b8b590f6639fb6d308daed64d35",
+    "mama-head.png": "cfe43888f76d285d7f45b256f0367e4b0b6ab9c8ecaf038ade8dbdb96f7a9577",
+    "mama-mobile-fallback.png": "701c98286caaf9065b8fb1b4702db5b22b841df162ebbaff3dc1cc8751ab9af5",
+    "mama-serving-group.png": "147f33daf3b53d69faf56e3927a71bcf0ac7e316945bed6f0230f20a6b24b4d8",
+    "mama-shadow.png": "578b8986c8b2296a2ae752ec4670f2b4ac1b04e7b953d627ce93d9f700c6a946",
+    "mama-source-reference.png": "701c98286caaf9065b8fb1b4702db5b22b841df162ebbaff3dc1cc8751ab9af5",
+    "manifest.json": "7ada298c2ffb646f59d092d9f207afec60198018b6baff8e02b177bc087a7798"
+  }
+}

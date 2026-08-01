@@ -1,0 +1,180 @@
+{
+  "character": "mama",
+  "phase": 2,
+  "source": {
+    "path": "assets/images/temporary/mama-temp-clean.png",
+    "bbox": {
+      "x0": 272,
+      "y0": 172,
+      "x1": 851,
+      "y1": 1324
+    },
+    "sourceDimensions": {
+      "width": 1024,
+      "height": 1536
+    },
+    "note": "Clean transparent Mama from mama-temp-clean.png (pizza tray pose, single character)."
+  },
+  "sceneCanvas": {
+    "width": 579,
+    "height": 1152,
+    "originInSource": {
+      "x": 272,
+      "y": 172
+    },
+    "aspectRatio": 0.5026
+  },
+  "jointExpandPx": 8,
+  "layerOverlaps": [
+    {
+      "a": "mama-serving-group",
+      "b": "mama-body",
+      "pixels": 4907
+    }
+  ],
+  "jointOverlaps": [
+    {
+      "serving": "mama-serving-group",
+      "body": "mama-body",
+      "pixels": 4907,
+      "percentOfServing": 5.7
+    }
+  ],
+  "layers": [
+    {
+      "id": "mama-shadow",
+      "file": "mama-shadow.png",
+      "zIndex": 0,
+      "sceneOffset": {
+        "x": 169,
+        "y": 1110
+      },
+      "size": {
+        "width": 241,
+        "height": 37
+      },
+      "pivot": {
+        "x": 120.5,
+        "y": 18.5
+      },
+      "transformOrigin": "50% 50%",
+      "group": "shadow",
+      "generated": true
+    },
+    {
+      "id": "mama-body",
+      "file": "mama-body.png",
+      "zIndex": 10,
+      "sceneOffset": {
+        "x": 0,
+        "y": 346
+      },
+      "size": {
+        "width": 522,
+        "height": 806
+      },
+      "pivot": {
+        "x": 261.0,
+        "y": 725.4
+      },
+      "transformOrigin": "50.0% 90.0%",
+      "group": "body",
+      "motion": null
+    },
+    {
+      "id": "mama-head",
+      "file": "mama-head.png",
+      "zIndex": 20,
+      "sceneOffset": {
+        "x": 51,
+        "y": 0
+      },
+      "size": {
+        "width": 319,
+        "height": 346
+      },
+      "pivot": {
+        "x": 162.82,
+        "y": 345
+      },
+      "transformOrigin": "51.0% 99.7%",
+      "group": "head",
+      "motion": null,
+      "jointZone": {
+        "x0": 173,
+        "y0": 276,
+        "x1": 405,
+        "y1": 391
+      }
+    },
+    {
+      "id": "mama-serving-group",
+      "file": "mama-serving-group.png",
+      "zIndex": 30,
+      "sceneOffset": {
+        "x": 15,
+        "y": 432
+      },
+      "size": {
+        "width": 564,
+        "height": 236
+      },
+      "pivot": {
+        "x": 282.0,
+        "y": 37.76
+      },
+      "transformOrigin": "50.0% 16.0%",
+      "group": "serving",
+      "motion": null,
+      "jointZone": {
+        "x0": 104,
+        "y0": 345,
+        "x1": 474,
+        "y1": 506
+      }
+    }
+  ],
+  "mobileFallback": "mama-mobile-fallback.png",
+  "sourceReference": "mama-source-reference.png",
+  "motionBlocked": [
+    "mama-head",
+    "mama-serving-group"
+  ],
+  "servingMotionSelection": {
+    "candidates": [
+      [
+        -3,
+        3
+      ],
+      [
+        -2,
+        2
+      ],
+      [
+        -1,
+        1
+      ]
+    ],
+    "selected": null,
+    "endpointHolePixels": 111,
+    "note": "blocked - no clean non-zero serving rotation (best [-1, 1] left 111 torso holes)"
+  },
+  "layerContract": {
+    "required": [
+      "mama-shadow",
+      "mama-body",
+      "mama-head",
+      "mama-serving-group"
+    ],
+    "servingGroupContains": [
+      "arms",
+      "hands",
+      "pizza"
+    ],
+    "headMotion": "static \u2014 independent rotation exposed outlines/hidden geometry"
+  },
+  "evidence": {
+    "browserRoot": "docs/phase2/evidence/mama/browser",
+    "fallback": "docs/phase2/evidence/mama/browser/fallback_desktop.png"
+  }
+}
