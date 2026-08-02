@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <a href="#menu" class="skip-link">Skip to menu</a>
+    <a href="#menuContentStart" class="skip-link">Skip to menu</a>
     <div class="page-transition" id="pageTransition" aria-hidden="true">
         <div class="page-transition-inner">
             <div class="page-transition-logo">VOYA HOUSE</div>
@@ -137,7 +137,26 @@
 
     <!-- ===== MENU ===== -->
     <section class="menu-section section-motion" id="menu">
-        <div class="menu-header reveal">
+        <!-- Phase 3: shared menu-story framework (decorative; real menu stays in normal flow below) -->
+        <div class="p3-menu-story" id="p3MenuStory" aria-hidden="true" data-phase3-story>
+            <div class="p3-stage">
+                <div class="p3-frame">
+                    <div class="p3-group">
+                        <span class="p3-arm"></span>
+                        <span class="p3-plate"></span>
+                    </div>
+                </div>
+                <div class="p3-elements" aria-hidden="true">
+                    <span class="p3-el p3-el--1"></span>
+                    <span class="p3-el p3-el--2"></span>
+                    <span class="p3-el p3-el--3"></span>
+                    <span class="p3-el p3-el--4"></span>
+                    <span class="p3-el p3-el--5"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-header reveal" id="menuContentStart" tabindex="-1">
             <div class="menu-eyebrow">Discover</div>
             <h2 class="menu-title">Your Table Awaits</h2>
             <p class="menu-subtitle">Pick a mood, add items to your cart, and order on WhatsApp.</p>

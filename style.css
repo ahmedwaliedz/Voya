@@ -1805,6 +1805,113 @@
             }
         }
 
+        /* ===== PHASE 3: SHARED MENU STORY FRAMEWORK ===== */
+        /* Decorative prototype. Real menu stays in normal flow below this stage. */
+        .p3-menu-story {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--soft-ivory);
+            overflow: hidden;
+            z-index: 1;
+        }
+        .p3-stage {
+            position: relative;
+            width: 100%;
+            max-width: 760px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .p3-frame {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 32% 30%, var(--coffee-cream) 0%, var(--warm-beige) 65%, rgba(216, 169, 143, 0.35) 100%);
+            box-shadow:
+                0 2px 8px rgba(8, 9, 7, 0.06),
+                0 20px 60px rgba(8, 9, 7, 0.14);
+            flex-shrink: 0;
+        }
+        .p3-group {
+            position: absolute;
+            inset: 0;
+        }
+        .p3-arm {
+            position: absolute;
+            top: 34%;
+            left: 50%;
+            width: 4px;
+            height: 86px;
+            margin-left: -2px;
+            background: var(--deep-black);
+            border-radius: 2px;
+            transform-origin: 50% 8px;
+        }
+        .p3-plate {
+            position: absolute;
+            top: calc(34% + 86px - 36px);
+            left: 50%;
+            width: 72px;
+            height: 72px;
+            margin-left: -36px;
+            border-radius: 50%;
+            background: var(--terracotta);
+            box-shadow:
+                0 4px 12px rgba(192, 84, 42, 0.32),
+                inset 0 -3px 0 rgba(0, 0, 0, 0.08);
+            transform-origin: 50% 50%;
+        }
+        .p3-elements {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        .p3-el {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 14px;
+            height: 14px;
+            margin: -7px 0 0 -7px;
+            border-radius: 50%;
+            opacity: 0;
+            will-change: transform, opacity;
+        }
+        .p3-el--1 { background: var(--terracotta); }
+        .p3-el--2 { background: var(--olive-green); }
+        .p3-el--3 { background: var(--healthy-green); }
+        .p3-el--4 { background: var(--deep-black); }
+        .p3-el--5 { background: var(--coffee-cream); box-shadow: 0 0 0 2px var(--terracotta); }
+
+        /* Mobile: hide the prototype, let the real menu flow directly. */
+        @media (max-width: 768px) {
+            .p3-menu-story { display: none; }
+        }
+
+        /* Reduced motion: hide the prototype, show the menu immediately. */
+        @media (prefers-reduced-motion: reduce) {
+            .p3-menu-story { display: none; }
+        }
+
+        /* ===== FIXED-HEADER ANCHOR OFFSET ===== */
+        /* The fixed header is ~97px on desktop and ~80px on mobile.
+           scroll-margin-top keeps Skip-to-menu and direct #menu nav
+           from landing under it, without touching JS. */
+        #menuContentStart { scroll-margin-top: 110px; }
+        @media (max-width: 768px) {
+            /* On mobile the Phase 3 stage is hidden, so #menu lands on the
+               real menu-header and needs the offset too. */
+            #menu { scroll-margin-top: 100px; }
+            #menuContentStart { scroll-margin-top: 100px; }
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .story-container { grid-template-columns: 1fr; gap: 2.5rem; }

@@ -30,7 +30,7 @@ After completing any phase, review it to confirm that:
 | 0. Establish the baseline | Accepted | — |
 | 1. Clean up the current website | Accepted | — |
 | 2. Prepare illustration assets | Accepted | — |
-| 3. Build the menu story framework | Not started | — |
+| 3. Build the menu story framework | Ready for review | — |
 | 4. Build the Papa scene | Not started | — |
 | 5. Build the Mama scene | Not started | — |
 | 6. Build Voya Coffee and the House ending | Not started | — |

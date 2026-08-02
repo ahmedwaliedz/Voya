@@ -186,16 +186,17 @@
 
             const tl = gsap.timeline({
                 defaults: { ease: 'power2.out' },
-                onComplete: () => {
-                    document.body.classList.remove('is-loading');
-                    document.body.classList.add('is-loaded', 'transition-done');
+            onComplete: () => {
+                document.body.classList.remove('is-loading');
+                document.body.classList.add('is-loaded', 'transition-done');
 
-                    gsap.set(transition, { display: 'none', pointerEvents: 'none' });
+                gsap.set(transition, { display: 'none', pointerEvents: 'none' });
 
-                    initHeroMotion();
-                    initScrollReveals();
-                    initHeroScrollParallax();
-                }
+                initHeroMotion();
+                initScrollReveals();
+                initHeroScrollParallax();
+                initMenuStoryFramework();
+            }
             });
 
             if (transitionInner) {
@@ -400,6 +401,99 @@
                     );
                 }
             });
+        }
+
+        // ===== PHASE 3: SHARED MENU STORY FRAMEWORK =====
+        // Single GSAP timeline + one ScrollTrigger pinned prototype.
+        // Names scoped with `p3-` / `id: 'p3-menu-story'` so future phases cannot collide.
+        // Cleanup is local: the matchMedia revert kills only the Phase 3 trigger and timeline.
+        // Mobile and reduced motion never enter the pinned branch; CSS hides the stage.
+        let p3MenuStory = { mm: null, revert: null };
+
+        function initMenuStoryFramework() {
+            const story = document.getElementById('p3MenuStory');
+            if (!story) return;
+
+            if (!hasGSAP || !hasScrollTrigger) {
+                story.style.display = 'none';
+                return;
+            }
+
+            // Revert any prior init (defensive: init called twice).
+            if (p3MenuStory.revert) {
+                p3MenuStory.revert();
+                p3MenuStory.revert = null;
+                p3MenuStory.mm = null;
+            }
+
+            const mm = gsap.matchMedia();
+            p3MenuStory.mm = mm;
+
+            mm.add('(min-width: 769px) and (prefers-reduced-motion: no-preference)', () => {
+                const frame = story.querySelector('.p3-frame');
+                const group = story.querySelector('.p3-group');
+                const plate = story.querySelector('.p3-plate');
+                const elements = story.querySelectorAll('.p3-el');
+                if (!frame || !group || !plate || !elements.length) return;
+
+                gsap.set(elements, { x: 0, y: 0, opacity: 0, scale: 0.4 });
+                gsap.set(frame, { scale: 0.88, opacity: 0, transformOrigin: '50% 50%' });
+
+                const tl = gsap.timeline({
+                    defaults: { ease: 'none' },
+                    scrollTrigger: {
+                        trigger: story,
+                        start: 'top top',
+                        end: '+=80%',
+                        pin: true,
+                        scrub: 0.5,
+                        pinSpacing: true,
+                        anticipatePin: 1,
+                        // ponytail: section-level scroll reveals set `transform: matrix(...)`
+                        // on the menu section, which would otherwise become the containing
+                        // block for the pinned story and trap it above the viewport.
+                        // pinReparent re-parents the pinned element to <body> during the pin.
+                        pinReparent: true,
+                        id: 'p3-menu-story',
+                    },
+                });
+
+                // Entrance
+                tl.to(frame, { scale: 1, opacity: 1, duration: 0.12, ease: 'power2.out' }, 0);
+
+                // Prototype motion: arm tilts, plate tilts.
+                tl.to(group, { rotate: 7, duration: 0.26, ease: 'power1.inOut' }, 0.14);
+                tl.to(plate, { rotate: -12, y: 4, duration: 0.26, ease: 'power1.inOut' }, 0.18);
+
+                // Decorative release: 5 neutral elements drift down toward the menu area.
+                const releaseX = [-90, 70, -50, 110, -30];
+                const releaseY = [80, 110, 150, 95, 170];
+                tl.to(elements, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.08,
+                    stagger: 0.015,
+                    ease: 'power2.out',
+                }, 0.42);
+                tl.to(elements, {
+                    x: (i) => releaseX[i] || 0,
+                    y: (i) => releaseY[i] || 0,
+                    duration: 0.28,
+                    stagger: 0.015,
+                    ease: 'power1.in',
+                }, 0.46);
+
+                // Scene exit: hand the pinned stage back to the real menu below.
+                tl.to([frame, group, plate, elements], {
+                    opacity: 0,
+                    duration: 0.18,
+                    ease: 'power2.in',
+                }, 0.82);
+            });
+
+            p3MenuStory.revert = () => {
+                mm.revert();
+            };
         }
 
         function initScrollReveals() {
@@ -1221,7 +1315,16 @@
                 a.addEventListener('click', e => {
                     e.preventDefault();
                     const t = document.querySelector(a.getAttribute('href'));
-                    if (t) t.scrollIntoView({ behavior: 'smooth' });
+                    if (!t) return;
+                    // Reduced motion: use 'auto' so the CSS scroll-behavior override (instant)
+                    // wins; otherwise animate smoothly. Keeps keyboard / anchor nav accessible.
+                    const behavior = reduceMotion ? 'auto' : 'smooth';
+                    t.scrollIntoView({ behavior });
+                    if (a.classList.contains('skip-link')) {
+                        // Move keyboard focus to the real menu header so screen readers
+                        // and tab order land on usable content, not the decorative stage.
+                        t.focus({ preventScroll: true });
+                    }
                     closeMobileMenu();
                 });
             });
